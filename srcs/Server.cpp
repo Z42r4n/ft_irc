@@ -6,7 +6,7 @@
 /*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/20 17:12:52 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/22 14:01:32 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ Server::Server(t_port port, std::string password)
     }
     this->port = port;
     this->password = password;
+    this->nfds = 0;
 }
 
 
@@ -80,88 +81,55 @@ void Server::listenSocket(void)
     std::cout << "Server is listening on port " << this->port << std::endl;
 }
 
-void Server::waitPoll(void)
-{
-    // initialize pollfd structure
-    memset(this->fds, 0, sizeof(this->fds));
-    this->fds[0].fd = this->serverfd;
-    this->fds[0].events = POLLIN;
-    // wait for poll events
-    while (true)
-    {
-        int poll_count = poll(this->fds, MAX_CLIENTS, -1);
-        if (poll_count < 0)
-            throw std::runtime_error("poll() failed: " + std::string(strerror(errno)) + "\n");
-        for (int i = 0; i < MAX_CLIENTS; i++)
-        {
-            if (this->fds[i].revents == 0)
-                continue;
-            if (this->fds[i].revents != POLLIN)
-                throw std::runtime_error("revents != POLLIN\n");
-            if (this->fds[i].fd == this->serverfd)
-                this->acceptSocket();
-            else
-                throw std::runtime_error("not serverfd\n");
-        }
-    }
-  
-}
-
 void Server::acceptSocket(void)
 {
-    // handle multiple clients
-    
-    int new_socket, valread;
-    std::vector<int> clients(MAX_CLIENTS, 0);
-    char buffer[BUFFER_SIZE] = {0};
-    
-    fds[0].fd = this->serverfd;
-    fds[0].events = POLLIN;
+    int clientfd[MAX_CLIENTS];
+    struct sockaddr_in clientaddr;
+    socklen_t addr_size = sizeof(clientaddr);
+    char buffer[BUFFER_SIZE];
 
-    // Initialize the client sockets to 0
-    for (int i = 1; i <= MAX_CLIENTS; i++) {
-        clients[i - 1] = 0;
-        fds[i].fd = 0;
-        fds[i].events = POLLIN;
-    }
+    bzero(this->fds, sizeof(this->fds));
+    this->fds[0].fd = this->serverfd;
+    this->fds[0].events = POLLIN;
 
-    while (true) {
-        // Wait for events on the sockets
-        int activity = poll(fds, MAX_CLIENTS + 1, -1);
-        if (activity < 0) {
-            perror("poll");
-            exit(EXIT_FAILURE);
-        }
-
-        // Check for incoming connections
-        if (fds[0].revents & POLLIN) {
-            if ((new_socket = accept(serverfd, (struct sockaddr *)&serv_addr, (socklen_t*)&serv_addr)) < 0) {
-                perror("accept");
-                exit(EXIT_FAILURE);
+    while (true)
+    {
+        if (poll(this->fds, this->nfds + 1, -1) < 0)
+            throw std::runtime_error("poll() failed: " + std::string(strerror(errno)) + "\n");
+            
+        if (this->nfds < MAX_CLIENTS)
+        {
+            if (this->fds[0].revents & POLLIN)
+            {
+                clientfd[this->nfds] = accept(this->serverfd, (struct sockaddr *)&clientaddr, &addr_size);
+                this->fds[this->nfds + 1].fd = clientfd[this->nfds];
+                this->fds[this->nfds + 1].events = POLLIN;
+                this->nfds++;
+                printf("client connected\n");
             }
-
-            // Add the new client socket to the pollfd array
-            for (int i = 1; i <= MAX_CLIENTS; i++) {
-                if (clients[i - 1] == 0) {
-                    clients[i - 1] = new_socket;
-                    fds[i].fd = new_socket;
-                    break;
+        } 
+        else 
+        {
+            throw std::runtime_error("too many clients\n");
+        }
+        
+        for (int i = 0; i < MAX_CLIENTS; i++)
+        {
+            if (clientfd[i] > 0 && this->fds[i + 1].revents & POLLIN)
+            {
+                int rcv = recv(clientfd[i], buffer, BUFFER_SIZE, 0);
+                if (rcv > 0)
+                {
+                    buffer[rcv] = '\0';
+                    printf ("%s", buffer);
                 }
-            }
-        }
-
-        // Check for data on the client sockets
-        for (int i = 1; i <= MAX_CLIENTS; i++) {
-            if (clients[i - 1] > 0 && fds[i].revents & POLLIN) {
-                valread = read(clients[i - 1], buffer, BUFFER_SIZE);
-                if (valread <= 0) {
-                    // Client disconnected
-                    close(clients[i - 1]);
-                    clients[i - 1] = 0;
-                    fds[i].fd = 0;
-                } else {
-                    // Echo the message back to the client
-                    send(clients[i - 1], buffer, strlen(buffer), 0);
+                
+                if (rcv <= 0)
+                {
+                   close(clientfd[i]);
+                   clientfd[i] = 0;
+                   this->fds[i + 1].fd = 0;
+                   printf("client disconnected\n");
                 }
             }
         }

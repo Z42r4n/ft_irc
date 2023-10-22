@@ -6,23 +6,24 @@
 #    By: zarran <zarran@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/10/16 19:46:52 by zarran           ###   ########.fr        #
+#    Updated: 2023/10/22 14:03:31 by zarran           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 INCS		=	./incs/Server.hpp	\
-				./incs/Colors.hpp
+				./incs/Colors.hpp	\
+				./incs/Client.hpp	\
+				./incs/ircserv.hpp	
 				
 				# ./incs/Channel.hpp	\
-				# ./incs/Client.hpp	\
 				# ./incs/Command.hpp	\
 				# ./incs/Message.hpp	\
 
 SRCS		=	./irc_main.cpp	\
-				./srcs/Server.cpp
+				./srcs/Server.cpp	\
+				./srcs/Client.cpp	
 				
 				# ./srcs/Channel.cpp	\
-				# ./srcs/Client.cpp	\
 				# ./srcs/Command.cpp	\
 				# ./srcs/Message.cpp	\
 

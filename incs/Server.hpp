@@ -6,7 +6,7 @@
 /*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/20 16:11:23 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/22 14:01:51 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <ircserv.hpp>
 
+class Client;
 class Server
 {
     public:
@@ -29,7 +30,6 @@ class Server
         void createSocket(void);
         void bindSocket(void);
         void listenSocket(void);
-        void waitPoll(void);
         void acceptSocket(void);
         
         
@@ -38,6 +38,7 @@ class Server
         std::string password;
         t_fd serverfd;
         struct sockaddr_in serv_addr;
-        struct pollfd fds[MAX_CLIENTS];
-        std::map<t_fd, std::string> clients;
+        struct pollfd fds[MAX_CLIENTS + 1];
+        int nfds;
+        std::map<t_fd, Client> clients;
 }; 
