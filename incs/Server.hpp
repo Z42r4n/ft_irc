@@ -6,7 +6,7 @@
 /*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/22 14:01:51 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/22 18:57:57 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,15 +30,16 @@ class Server
         void createSocket(void);
         void bindSocket(void);
         void listenSocket(void);
-        void acceptSocket(void);
-        
+        void acceptSockets(void);
+        void receiveData(void);
         
     private:
+        t_fd serverfd;
+        t_fd clientsfd[MAX_CLIENTS];
         t_port port;
         std::string password;
-        t_fd serverfd;
         struct sockaddr_in serv_addr;
         struct pollfd fds[MAX_CLIENTS + 1];
         int nfds;
-        std::map<t_fd, Client> clients;
+        std::map<t_fd, Client> clients[MAX_CLIENTS];
 }; 
