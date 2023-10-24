@@ -6,7 +6,7 @@
 /*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/22 18:57:57 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/24 15:42:15 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ class Server
         void listenSocket(void);
         void acceptSockets(void);
         void receiveData(void);
+        void parseData(std::string data);
+        void sendData(t_fd fd, std::string data);
         
     private:
         t_fd serverfd;

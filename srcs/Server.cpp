@@ -6,7 +6,7 @@
 /*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/22 19:26:35 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/24 15:54:54 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,9 @@ void Server::receiveData(void)
             if (rcv > 0)
             {
                 buffer[rcv] = '\0';
+                // parse data
+                parseData(buffer);
+                
                 printf ("%s", buffer);
             }
             
@@ -156,4 +159,78 @@ void Server::receiveData(void)
             }
         }
     }
+}
+
+// parse irc server commands
+void Server::parseData(std::string data)
+{
+    std::string command;
+    std::string params;
+    std::string prefix;
+    std::string trailing;
+    std::string middle;
+    std::string::size_type pos;
+    
+    // check prefix
+    if (data[0] == ':')
+    {
+        pos = data.find(' ');
+        prefix = data.substr(1, pos - 1);
+        data.erase(0, pos + 1);
+    }
+    
+    // check trailing
+    if (data.find(" :") != std::string::npos)
+    {
+        pos = data.find(" :");
+        trailing = data.substr(pos + 2);
+        data.erase(pos);
+    }
+    
+    // check command
+    pos = data.find(' ');
+    command = data.substr(0, pos);
+    data.erase(0, pos + 1);
+    
+    // check params
+    params = data;
+    
+    // check middle
+    if (params.find(' ') != std::string::npos)
+    {
+        pos = params.find(' ');
+        middle = params.substr(0, pos);
+        params.erase(0, pos + 1);
+    }
+    
+    // check params
+    if (params.find(' ') != std::string::npos)
+    {
+        pos = params.find(' ');
+        params.erase(0, pos + 1);
+    }
+    
+    // check command
+    if (command == "PASS")
+    {
+        if (params == this->password)
+        {
+            this->sendData(this->clientsfd[0], "001 :Welcome to the Internet Relay Network " + prefix + "\n");
+        }
+        else
+        {
+            this->sendData(this->clientsfd[0], "464 :Password incorrect\n");
+        }
+    }
+    // else if (command == "NICK")
+    // {
+    //     this->clients[this->nfds - 1].setNickname(params
+    // }
+}
+
+// send data
+void Server::sendData(t_fd fd, std::string data)
+{
+    if (send(fd, data.c_str(), data.length(), 0) < 0)
+        throw std::runtime_error("send() failed: " + std::string(strerror(errno)) + "\n");
 }

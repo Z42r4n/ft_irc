@@ -1,43 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/24 15:51:36 by zarran           ###   ########.fr       */
+/*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
+/*   Updated: 2023/10/24 14:58:39 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
 
-Client::Client() {}
+Channel::Channel() {}
 
-Client::~Client() {}
+Channel::~Channel() {}
 
-Client::Client(t_fd fd, std::string name)
+Channel::Channel(std::string name)
 {
-    this->fd = fd;
-    this->nickname = name;
+    this->name = name;
 }
 
-t_fd Client::getFd(void) const
+std::string Channel::getName(void) const
 {
-    return this->fd;
+    return this->name;
 }
 
-std::string Client::getNickname(void) const
+void Channel::setName(std::string name)
 {
-    return this->nickname;
+    this->name = name;
 }
 
-void Client::setFd(t_fd fd)
-{
-    this->fd = fd;
-}
-
-void Client::setNickname(std::string name)
-{
-    this->nickname = name;
-}
+/* ************************************************************************** */

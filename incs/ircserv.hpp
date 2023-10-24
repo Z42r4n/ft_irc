@@ -6,7 +6,7 @@
 /*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/22 14:05:15 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/24 15:41:38 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,9 @@ typedef unsigned int t_port;
 #include <Colors.hpp>
 #include <Server.hpp>
 #include <Client.hpp>
+#include <Channel.hpp>
+
+// PROTOTYPES
 
 
 #endif
