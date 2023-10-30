@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/30 11:36:03 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/30 14:57:56 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,29 @@ Client & Client::operator=(Client const & src)
     return *this;
 }
 
+struct sockaddr_in Client::getAddr(void) const
+{
+    return this->addr;
+}
 
-// t_fd Client::getFd(void) const
-// {
-//     return this->fd;
-// }
+void Client::setAddr(struct sockaddr_in addr)
+{
+    this->addr = addr;
+}
+
+void Client::setIsRegistered(bool isRegistered)
+{
+    this->isRegistered = isRegistered;
+}
 
 std::string Client::getNickname(void) const
 {
     return this->nickname;
+}
+
+bool Client::getIsRegistered(void) const
+{
+    return this->isRegistered;
 }
 
 // void Client::setFd(t_fd fd)

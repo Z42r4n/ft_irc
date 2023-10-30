@@ -6,23 +6,24 @@
 #    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/10/30 11:01:37 by ymoutaou         ###   ########.fr        #
+#    Updated: 2023/10/30 15:01:42 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-INCS		=	./incs/Server.hpp	\
-				./incs/Colors.hpp	\
-				./incs/Client.hpp	\
-				./incs/ircserv.hpp	\
+INCS		=	./incs/Server.hpp		\
+				./incs/Colors.hpp		\
+				./incs/Client.hpp		\
+				./incs/ircserv.hpp		\
 				./incs/Channel.hpp	
 				
 				# ./incs/Command.hpp	\
 				# ./incs/Message.hpp	\
 
-SRCS		=	./irc_main.cpp	\
-				./srcs/Server.cpp	\
-				./srcs/Client.cpp	\
-				./srcs/Channel.cpp	\
+SRCS		=	./irc_main.cpp			\
+				./srcs/Server.cpp		\
+				./srcs/Client.cpp		\
+				./srcs/Channel.cpp		\
+				./srcs/cmds/PASS.cpp	\
 				./srcs/cmds/NICK.cpp	\
 				./srcs/cmds/USER.cpp	\
 				
