@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/30 14:57:56 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/30 18:32:14 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 Client::Client()
 {
     this->isRegistered = false;
-    this->nickname = "";
+    this->isOperator = false;
+    this->isGetPassword = false;
+    this->nickname = "*";
     this->realname = "";
     this->username = "";
 }
@@ -49,25 +51,40 @@ void Client::setAddr(struct sockaddr_in addr)
     this->addr = addr;
 }
 
+bool Client::isRegistered(void) const
+{
+    return this->isRegistered;
+}
+
 void Client::setIsRegistered(bool isRegistered)
 {
     this->isRegistered = isRegistered;
+}
+
+bool Client::isOperator(void) const
+{
+    return this->isOperator;
+}
+
+void Client::setIsOperator(bool isOperator)
+{
+    this->isOperator = isOperator;
+}
+
+bool Client::isGetPassword(void) const
+{
+    return this->isGetPassword;
+}
+
+void Client::setIsGetPassword(bool isGetPassword)
+{
+    this->isGetPassword = isGetPassword;
 }
 
 std::string Client::getNickname(void) const
 {
     return this->nickname;
 }
-
-bool Client::getIsRegistered(void) const
-{
-    return this->isRegistered;
-}
-
-// void Client::setFd(t_fd fd)
-// {
-//     this->fd = fd;
-// }
 
 void Client::setNickname(std::string name)
 {

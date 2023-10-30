@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/30 16:05:35 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/30 18:33:42 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,26 +174,42 @@ void Server::receiveData(void)
 // parse irc server commands
 void Server::parseData(int i, t_fd fd, std::string data)
 {
-	// Client client;
-	std::string command;
-	std::string param;
+	std::string command = "";
+	std::string param = "";
 
 	// extract command
-	command = data.substr(0, data.find(" "));
+	if (data.find(" ") != std::string::npos)
+		command = data.substr(0, data.find(" "));
+	
 	if (data.find(" ") != std::string::npos)
 	{
+		// std::cout << "has param" << std::endl;
 		// extract param
 		param = data.substr(data.find(" ") + 1);
 		// remove \n from param
 		param.erase(std::remove(param.begin(), param.end(), '\n'), param.end());
 	}
+	else
+	{
+		std::cout << "no param" << std::endl;
+	}
 
+	// check commands and call functions
 	if (command == "PASS" || command == "pass")
 		passCommand(i, fd , param);
-	// if (command == "NICK" || command == "nick")
-	//     // nickCommand(client, param);
-	// if (command == "USER" || command == "user")
-	//     userCommand(client, param);
+	else if (command == "NICK" || command == "nick")
+		nickCommand(i, fd, param);
+	else if (command == "USER" || command == "user")
+		userCommand(i, fd, param);
+	else if (clients[i][fd].isRegistered())
+	{
+		// send irc server error message
+		sendData(fd, ":localhost 421 " + clients[i][fd].getNickname() + " " + command + " :Unknown command\n");
+	}
+	
+	// reset command and param
+	command = "";
+	param = "";
 }
 
 // send data
