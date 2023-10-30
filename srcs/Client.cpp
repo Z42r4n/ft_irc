@@ -3,39 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/24 15:51:36 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/30 11:36:03 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
 
-Client::Client() {}
+Client::Client()
+{
+    this->isRegistered = false;
+    this->nickname = "";
+    this->realname = "";
+    this->username = "";
+}
 
 Client::~Client() {}
 
-Client::Client(t_fd fd, std::string name)
+Client::Client(Client const & src)
 {
-    this->fd = fd;
-    this->nickname = name;
+    *this = src;
 }
 
-t_fd Client::getFd(void) const
+Client & Client::operator=(Client const & src)
 {
-    return this->fd;
+    if (this != &src)
+    {
+        this->isRegistered = src.isRegistered;
+        this->nickname = src.nickname;
+        this->realname = src.realname;
+        this->username = src.username;
+    }
+    return *this;
 }
+
+
+// t_fd Client::getFd(void) const
+// {
+//     return this->fd;
+// }
 
 std::string Client::getNickname(void) const
 {
     return this->nickname;
 }
 
-void Client::setFd(t_fd fd)
-{
-    this->fd = fd;
-}
+// void Client::setFd(t_fd fd)
+// {
+//     this->fd = fd;
+// }
 
 void Client::setNickname(std::string name)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/24 15:54:54 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/30 12:08:05 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,21 +46,31 @@ t_port Server::getPort(void) const
 
 void Server::run(void)
 {
+    // initialize the map of clients
+    for (int i = 0; i < MAX_CLIENTS; i++)
+    {
+        clients[i] = std::map<t_fd, Client>();
+    }
+    
     // create socket
-    this->createSocket();
+    createSocket();
+    
     // bind socket
-    this->bindSocket();
+    bindSocket();
+
     // listen socket
-    this->listenSocket();
+    listenSocket();
+    
     // initialize pollfd structure
-    bzero(this->fds, sizeof(this->fds));
-    this->fds[0].fd = this->serverfd;
-    this->fds[0].events = POLLIN;
+    bzero(fds, sizeof(fds));
+    fds[0].fd = serverfd;
+    fds[0].events = POLLIN;
+    
     // main loop of server, accept and receive data
     while (true)
     {
-        this->acceptSockets();
-        this->receiveData();
+        acceptSockets();
+        receiveData();
     }
 }
 
@@ -68,24 +78,28 @@ void Server::run(void)
 void Server::createSocket(void)
 {
     // call socket function
-    if ((this->serverfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    if ((serverfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         throw std::runtime_error("socket() failed: " + std::string(strerror(errno)) + "\n");
     // set socket options
     int opt = 1;
-    if (setsockopt(this->serverfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
+    if (setsockopt(serverfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
         throw std::runtime_error("setsockopt() failed: " + std::string(strerror(errno)) + "\n");
+    // set socket non-blocking
+    if (fcntl(serverfd, F_SETFL, O_NONBLOCK) < 0)
+        throw std::runtime_error("fnctl() failed: " + std::string(strerror(errno)) + "\n");
 }
 
 // bind socket
 void Server::bindSocket(void)
 {
     // initialize socket structure
-    bzero((char *) &this->serv_addr, sizeof(this->serv_addr));
+    bzero((char *) &serv_addr, sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(this->port);
+    serv_addr.sin_port = htons(port);
     serv_addr.sin_addr.s_addr = INADDR_ANY;
+    
     // bind the host address using bind() call
-    if (bind(this->serverfd, (struct sockaddr *) &serv_addr, sizeof(this->serv_addr)) < 0)
+    if (bind(serverfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0)
         throw std::runtime_error("bind() failed: " + std::string(strerror(errno)) + "\n");
 }
 
@@ -93,29 +107,32 @@ void Server::bindSocket(void)
 void Server::listenSocket(void)
 {
     // start listening for the clients, here process will go in sleep mode and will wait for the incoming connection
-    if (listen(this->serverfd, MAX_CLIENTS) < 0)
+    if (listen(serverfd, MAX_CLIENTS) < 0)
         throw std::runtime_error("listen() failed: " + std::string(strerror(errno)) + "\n");
-    std::cout << "Server is listening on port " << this->port << std::endl;
+    std::cout << "\n[+] Server is listening on port: " << BOLDGREEN << port << RESET << std::endl;
 }
 
 // accept sockets
 void Server::acceptSockets(void)
 {
-    if (poll(this->fds, this->nfds + 1, -1) < 0)
+    // wait for an activity on one of the sockets, timeout is -1, so wait indefinitely
+    if (poll(fds, nfds + 1, -1) < 0)
         throw std::runtime_error("poll() failed: " + std::string(strerror(errno)) + "\n");
-        
-    if (this->nfds < MAX_CLIENTS)
+    
+    // if server socket is readable, then new client connection is request
+    if (nfds < MAX_CLIENTS)
     {
-        if (this->fds[0].revents & POLLIN)
+        if (fds[0].revents & POLLIN)
         {
-            // this->clients[this->nfds] = accept(this->serverfd, (struct sockaddr *)&clientaddr, &addr_size);
-            this->clientsfd[this->nfds] = accept(this->serverfd, (struct sockaddr *)&clientaddr, &addr_size);
-            this->fds[this->nfds + 1].fd = this->clientsfd[this->nfds];
-            this->fds[this->nfds + 1].events = POLLIN;
-            this->nfds++;
-            printf("client connected\n"); // just for debug
+            // accept the connection
+            t_fd newfd = accept(serverfd, (struct sockaddr *)&clientaddr, &addr_size);
+            clients[nfds][newfd] = Client();
+            fds[nfds + 1].fd = newfd;
+            fds[nfds + 1].events = POLLIN;
+            nfds++;
+            std::cout << GREEN << "\n[+] New connection, socket fd is " << RESET << BOLDYELLOW << newfd << RESET << std::endl;
         }
-    } 
+    }
     else 
     {
         throw std::runtime_error("too many clients\n");
@@ -127,35 +144,33 @@ void Server::receiveData(void)
 {
     for (int i = 0; i < MAX_CLIENTS; i++)
     {
-        if (this->clientsfd[i] > 0 && this->fds[i + 1].revents & POLLIN)
+        for (t_clients_it clientPair = clients[i].begin(); clientPair != clients[i].end(); clientPair++)
         {
-            int rcv = recv(this->clientsfd[i], buffer, BUFFER_SIZE, 0);
-            if (rcv > 0)
+            t_fd clientFD = clientPair->first;
+            if (fds[i + 1].revents & POLLIN && fds[i + 1].fd == clientFD)
             {
-                buffer[rcv] = '\0';
-                // parse data
-                parseData(buffer);
-                
-                printf ("%s", buffer);
-            }
-            
-            if (rcv < 0)
-            {
-                if (errno != EWOULDBLOCK)
+                int rcv = recv(clientFD, buffer, BUFFER_SIZE, 0);
+                if (rcv > 0)
                 {
-                    close(this->clientsfd[i]);
-                    this->clientsfd[i] = 0;
-                    this->fds[i + 1].fd = 0;
+                    buffer[rcv] = '\0';
+                    // parse data
+                    parseData(buffer);
+                    printf("%s", buffer); // just for debug
+                }
+                // Client disconnected
+                else if (rcv == 0)
+                {
+                    close(clientFD);
+                    fds[i + 1].fd = 0;
+                    std::cout << RED << "\n[-] Client disconnected, socket fd is " << RESET << YELLOW << clientFD << RESET << std::endl;
+                }
+                // Handle recv() error
+                else if (errno != EWOULDBLOCK)
+                {
+                    close(clientFD);
+                    fds[i + 1].fd = 0;
                     throw std::runtime_error("recv() failed: " + std::string(strerror(errno)) + "\n");
                 }
-            }
-            
-            if (rcv == 0)
-            {
-                close(this->clientsfd[i]);
-                this->clientsfd[i] = 0;
-                this->fds[i + 1].fd = 0;
-                printf("client disconnected\n"); // just for debug
             }
         }
     }
@@ -164,68 +179,17 @@ void Server::receiveData(void)
 // parse irc server commands
 void Server::parseData(std::string data)
 {
+    // Client client;
     std::string command;
-    std::string params;
-    std::string prefix;
-    std::string trailing;
-    std::string middle;
-    std::string::size_type pos;
-    
-    // check prefix
-    if (data[0] == ':')
-    {
-        pos = data.find(' ');
-        prefix = data.substr(1, pos - 1);
-        data.erase(0, pos + 1);
-    }
-    
-    // check trailing
-    if (data.find(" :") != std::string::npos)
-    {
-        pos = data.find(" :");
-        trailing = data.substr(pos + 2);
-        data.erase(pos);
-    }
-    
-    // check command
-    pos = data.find(' ');
-    command = data.substr(0, pos);
-    data.erase(0, pos + 1);
-    
-    // check params
-    params = data;
-    
-    // check middle
-    if (params.find(' ') != std::string::npos)
-    {
-        pos = params.find(' ');
-        middle = params.substr(0, pos);
-        params.erase(0, pos + 1);
-    }
-    
-    // check params
-    if (params.find(' ') != std::string::npos)
-    {
-        pos = params.find(' ');
-        params.erase(0, pos + 1);
-    }
-    
-    // check command
-    if (command == "PASS")
-    {
-        if (params == this->password)
-        {
-            this->sendData(this->clientsfd[0], "001 :Welcome to the Internet Relay Network " + prefix + "\n");
-        }
-        else
-        {
-            this->sendData(this->clientsfd[0], "464 :Password incorrect\n");
-        }
-    }
-    // else if (command == "NICK")
-    // {
-    //     this->clients[this->nfds - 1].setNickname(params
-    // }
+    std::string param;
+
+    command = data.substr(0, data.find(" "));
+    param = data.substr(data.find(" ") + 1);
+
+    // if (command == "NICK" || command == "nick")
+    //     // nickCommand(client, param);
+    // if (command == "USER" || command == "user")
+    //     userCommand(client, param);
 }
 
 // send data

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: zarran <zarran@student.42.fr>              +#+  +:+       +#+         #
+#    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/10/24 15:41:28 by zarran           ###   ########.fr        #
+#    Updated: 2023/10/30 11:01:37 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,9 @@ INCS		=	./incs/Server.hpp	\
 SRCS		=	./irc_main.cpp	\
 				./srcs/Server.cpp	\
 				./srcs/Client.cpp	\
-				./srcs/Channel.cpp	
+				./srcs/Channel.cpp	\
+				./srcs/cmds/NICK.cpp	\
+				./srcs/cmds/USER.cpp	\
 				
 				# ./srcs/Command.cpp	\
 				# ./srcs/Message.cpp	\

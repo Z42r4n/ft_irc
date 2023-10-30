@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   irc_main.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:45:14 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/20 16:14:00 by zarran           ###   ########.fr       */
+/*   Updated: 2023/10/30 12:04:50 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int main(int ac, char **av)
     try {
         Server irc_obj(std::atoi(av[1]), av[2]);
         
-        std::cout << "password is: " << av[2] << std::endl;
-        std::cout << "Everything is ok" << std::endl;
         irc_obj.run();
     } catch (std::exception &e) {
         std::cerr << BOLDRED << "\nError:" << RESET << " " << e.what() << std::endl;
