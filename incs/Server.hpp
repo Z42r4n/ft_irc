@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/31 13:23:40 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:21:05 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 class Client;
 
 typedef std::map<t_fd, Client>::iterator t_clients_it;
+typedef std::vector<std::string> t_params;
 
 class Server
 {
@@ -40,9 +41,9 @@ class Server
         void sendData(t_fd fd, std::string data);
 
         // commands functions
-        void passCommand(int i, t_fd fd, std::string command, std::string param);
-        void nickCommand(int i, t_fd fd, std::string param);
-        void userCommand(int i, t_fd fd, std::string param);
+        void passCommand(int i, t_fd fd, t_params params);
+        void nickCommand(int i, t_fd fd, t_params params);
+        void userCommand(int i, t_fd fd, t_params params);
 
     private:
         t_fd serverfd;

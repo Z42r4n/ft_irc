@@ -6,15 +6,15 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 14:33:35 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/10/31 14:19:16 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 19:00:53 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
 
-void Server::passCommand(int i, t_fd fd, std::string command, std::string param)
+void Server::passCommand(int i, t_fd fd, t_params params)
 {
-	std::string pass = "";
+	std::string pass = params[1];
 	
 	// check if the client is already registered
 	if (clients[i][fd].isRegistered())
@@ -24,35 +24,27 @@ void Server::passCommand(int i, t_fd fd, std::string command, std::string param)
 		return ;
 	}
 	
-	// check empty password
-	if (param.empty())
+	// check if invalid number of params
+	if (params.size() != 2 && params[1].find(":") == std::string::npos)
 	{
 		// send irc server error message
-		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), command));
+		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
 		return ;
 	}
+
+	// get the pass after the colon symbol
+	if (params[1].find(":") != std::string::npos)
+		pass = ft::ft_getStr(params);
 	
-	// find the tow dots position
-	if (param.find(":") != std::string::npos)
-	{
-		// get the password
-		pass = param.substr(param.find(":") + 1);
-	}
-	else if ((param.find(" ") != std::string::npos))
-	{
-		// send irc server error message
-		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), command));
-		return;
-	}
-	
+	// check if the password is correct
 	if (this->password == pass)
 	{
-		// send irc server error message
+		// set the isGetPassword to true
 		clients[i][fd].setIsGetPassword(true);
 	}
 	else
 	{
 		// send irc server error message
-		this->sendData(fd, ERR_PASSWDMISMATCH);
+		this->sendData(fd, ERR_PASSWDMISMATCH(clients[i][fd].getNickname()));
 	}
 }

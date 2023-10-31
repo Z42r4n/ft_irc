@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/31 14:21:16 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 18:36:24 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,7 @@ void Server::receiveData(void)
 void Server::parseData(int i, t_fd fd, std::string data)
 {
 	std::string command = "";
-	std::string param = "";
+	std::vector<std::string> params;
 	static std::string oldData = "";
 	
 	// add data to oldData
@@ -188,23 +188,18 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		oldData.erase(std::remove(oldData.begin(), oldData.end(), '\n'), oldData.end());
 		oldData.erase(0, oldData.find_first_not_of(' '));
 		
-		// extract command
-		command = oldData.substr(0, oldData.find(" "));
-		if (oldData.find(" ") != std::string::npos)
-		{
-			// extract param
-			param = oldData.substr(oldData.find(" ") + 1);
-		}
+		params = ft::ft_split(oldData, " ");
+		command = params[0];
 		oldData = "";
 	}
 	
 	// check commands and call functions
 	if (command == "PASS" || command == "pass")
-		passCommand(i, fd , command, param);
+		passCommand(i, fd, params);
 	else if (command == "NICK" || command == "nick")
-		nickCommand(i, fd, param);
+		nickCommand(i, fd, params);
 	else if (command == "USER" || command == "user")
-		userCommand(i, fd, param);
+		userCommand(i, fd, params);
 	else if (clients[i][fd].isRegistered())
 	{
 		// send irc server error message
@@ -213,8 +208,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 
 	// reset command and param
 	command = "";
-	param = "";
-
+	params.clear();
+	params.shrink_to_fit();
 }
 
 // send data

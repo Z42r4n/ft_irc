@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/31 13:27:46 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 17:36:19 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 // DEFINE IRC SERVER MESSAGES
 #define ERR_UNKNOWNCOMMAND(p1, p2) ":irc.example.com 421 " + p1 + " " + p2 + " :Unknown command\r\n"
-#define ERR_ALREADYREGISTERED(p1) ":irc.example.com 462 " + p1 + " :Connection already registered\r\n"
+#define ERR_ALREADYREGISTERED(p1) ":irc.example.net 462 " + p1 + " :Connection already registered\r\n"
 #define ERR_NEEDMOREPARAMS(p1, p2) ":irc.example.com 461 " + p1 + " " + p2 + " :Syntax error\r\n"
-#define ERR_PASSWDMISMATCH ":irc.example.com 464 :Invalid password\r\n"
+#define ERR_PASSWDMISMATCH(p1) ":irc.example.com 464 " + p1 + " :Invalid password\r\n"
 
 // DEFINES
 
@@ -33,7 +33,9 @@ typedef unsigned int t_port;
 
 #include <iostream>
 #include <string>
+
 #include <map>
+#include <vector>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -48,6 +50,11 @@ typedef unsigned int t_port;
 #include <Channel.hpp>
 
 // PROTOTYPES
-
+namespace ft 
+{
+	// /srcs/cmds/tools.cpp
+	std::vector<std::string> ft_split(std::string str, std::string delim);
+	std::string ft_getStr(t_params params);
+}
 
 #endif
