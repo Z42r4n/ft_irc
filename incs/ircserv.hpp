@@ -6,12 +6,18 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/30 11:11:05 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 13:27:46 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __IRCSERV_HPP__
 # define __IRCSERV_HPP__
+
+// DEFINE IRC SERVER MESSAGES
+#define ERR_UNKNOWNCOMMAND(p1, p2) ":irc.example.com 421 " + p1 + " " + p2 + " :Unknown command\r\n"
+#define ERR_ALREADYREGISTERED(p1) ":irc.example.com 462 " + p1 + " :Connection already registered\r\n"
+#define ERR_NEEDMOREPARAMS(p1, p2) ":irc.example.com 461 " + p1 + " " + p2 + " :Syntax error\r\n"
+#define ERR_PASSWDMISMATCH ":irc.example.com 464 :Invalid password\r\n"
 
 // DEFINES
 

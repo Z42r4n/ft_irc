@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/30 18:33:42 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 14:21:16 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void Server::receiveData(void)
 					buffer[rcv] = '\0';
 					// parse data
 					parseData(i, clientFD, buffer);
-					printf("%s", buffer); // just for debug
+					printf("%s\n", buffer);
 				}
 				// Client disconnected
 				else if (rcv == 0)
@@ -176,27 +176,31 @@ void Server::parseData(int i, t_fd fd, std::string data)
 {
 	std::string command = "";
 	std::string param = "";
-
-	// extract command
-	if (data.find(" ") != std::string::npos)
-		command = data.substr(0, data.find(" "));
+	static std::string oldData = "";
 	
-	if (data.find(" ") != std::string::npos)
+	// add data to oldData
+	oldData += data;
+	
+	if (data.find('\n') != std::string::npos)
 	{
-		// std::cout << "has param" << std::endl;
-		// extract param
-		param = data.substr(data.find(" ") + 1);
-		// remove \n from param
-		param.erase(std::remove(param.begin(), param.end(), '\n'), param.end());
+		// remove \r\n and spaces from oldData
+		oldData.erase(std::remove(oldData.begin(), oldData.end(), '\r'), oldData.end());
+		oldData.erase(std::remove(oldData.begin(), oldData.end(), '\n'), oldData.end());
+		oldData.erase(0, oldData.find_first_not_of(' '));
+		
+		// extract command
+		command = oldData.substr(0, oldData.find(" "));
+		if (oldData.find(" ") != std::string::npos)
+		{
+			// extract param
+			param = oldData.substr(oldData.find(" ") + 1);
+		}
+		oldData = "";
 	}
-	else
-	{
-		std::cout << "no param" << std::endl;
-	}
-
+	
 	// check commands and call functions
 	if (command == "PASS" || command == "pass")
-		passCommand(i, fd , param);
+		passCommand(i, fd , command, param);
 	else if (command == "NICK" || command == "nick")
 		nickCommand(i, fd, param);
 	else if (command == "USER" || command == "user")
@@ -204,12 +208,13 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	else if (clients[i][fd].isRegistered())
 	{
 		// send irc server error message
-		sendData(fd, ":localhost 421 " + clients[i][fd].getNickname() + " " + command + " :Unknown command\n");
+		sendData(fd, ERR_UNKNOWNCOMMAND(clients[i][fd].getNickname(), command));
 	}
-	
+
 	// reset command and param
 	command = "";
 	param = "";
+
 }
 
 // send data

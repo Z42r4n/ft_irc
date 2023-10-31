@@ -6,34 +6,53 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 14:33:35 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/10/30 18:18:51 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 14:19:16 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
 
-void Server::passCommand(int i, t_fd fd, std::string param)
+void Server::passCommand(int i, t_fd fd, std::string command, std::string param)
 {
-	(void)i;
-    // print param size
-	std::cout << "PASS param size: " << param.size() << std::endl;
-	// print param
-	std::cout << "PASS param: " << param << std::endl;
-	// handle ERR_NEEDMOREPARAMS (461)
-	if (param.empty())
+	std::string pass = "";
+	
+	// check if the client is already registered
+	if (clients[i][fd].isRegistered())
 	{
 		// send irc server error message
-		sendData(fd, ":localhost 461 * PASS :Syntax error\n");
+		sendData(fd, ERR_ALREADYREGISTERED(clients[i][fd].getNickname()));
 		return ;
 	}
 	
-	if (password == param)
+	// check empty password
+	if (param.empty())
 	{
-		// clients[i][fd].setIsRegistered(true);
-		std::cout << "client registered" << std::endl;
+		// send irc server error message
+		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), command));
+		return ;
+	}
+	
+	// find the tow dots position
+	if (param.find(":") != std::string::npos)
+	{
+		// get the password
+		pass = param.substr(param.find(":") + 1);
+	}
+	else if ((param.find(" ") != std::string::npos))
+	{
+		// send irc server error message
+		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), command));
+		return;
+	}
+	
+	if (this->password == pass)
+	{
+		// send irc server error message
+		clients[i][fd].setIsGetPassword(true);
 	}
 	else
 	{
-		this->sendData(fd, "ERROR :Invalid password\n");
+		// send irc server error message
+		this->sendData(fd, ERR_PASSWDMISMATCH);
 	}
 }

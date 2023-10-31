@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/30 18:32:14 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 08:36:45 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,11 @@
 
 Client::Client()
 {
-    this->isRegistered = false;
-    this->isOperator = false;
-    this->isGetPassword = false;
-    this->nickname = "*";
-    this->realname = "";
-    this->username = "";
+    this->_isRegistered = false;
+    this->_hasPassword = false;
+    this->_nickname = "*";
+    this->_realname = "";
+    this->_username = "";
 }
 
 Client::~Client() {}
@@ -33,60 +32,50 @@ Client & Client::operator=(Client const & src)
 {
     if (this != &src)
     {
-        this->isRegistered = src.isRegistered;
-        this->nickname = src.nickname;
-        this->realname = src.realname;
-        this->username = src.username;
+        this->_isRegistered = src._isRegistered;
+        this->_nickname = src._nickname;
+        this->_realname = src._realname;
+        this->_username = src._username;
     }
     return *this;
 }
 
 struct sockaddr_in Client::getAddr(void) const
 {
-    return this->addr;
+    return this->_addr;
 }
 
 void Client::setAddr(struct sockaddr_in addr)
 {
-    this->addr = addr;
+    this->_addr = addr;
 }
 
 bool Client::isRegistered(void) const
 {
-    return this->isRegistered;
+    return this->_isRegistered;
 }
 
 void Client::setIsRegistered(bool isRegistered)
 {
-    this->isRegistered = isRegistered;
-}
-
-bool Client::isOperator(void) const
-{
-    return this->isOperator;
-}
-
-void Client::setIsOperator(bool isOperator)
-{
-    this->isOperator = isOperator;
+    this->_isRegistered = isRegistered;
 }
 
 bool Client::isGetPassword(void) const
 {
-    return this->isGetPassword;
+    return this->_hasPassword;
 }
 
-void Client::setIsGetPassword(bool isGetPassword)
+void Client::setIsGetPassword(bool password)
 {
-    this->isGetPassword = isGetPassword;
+    this->_hasPassword = password;
 }
 
 std::string Client::getNickname(void) const
 {
-    return this->nickname;
+    return this->_nickname;
 }
 
 void Client::setNickname(std::string name)
 {
-    this->nickname = name;
+    this->_nickname = name;
 }

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/30 18:27:43 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/10/31 08:34:58 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,12 @@ class Client
         void setIsOperator(bool isOperator);
         
     private:
-        std::string nickname;
-        std::string realname;
-        std::string username;
-        std::string password;
-        bool isRegistered;
-        bool isOperator;
-        bool isGetPassword;
-        struct sockaddr_in addr;
+        std::string _nickname;
+        std::string _realname;
+        std::string _username;
+        std::string _password;
+        bool _isRegistered;
+        bool _hasPassword;
+        struct sockaddr_in _addr;
         // socklen_t addrlen;
 };
