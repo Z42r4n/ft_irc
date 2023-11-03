@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 09:37:28 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 12:07:09 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,26 @@
 # define __IRCSERV_HPP__
 
 // DEFINE IRC SERVER MESSAGES
-#define ERR_UNKNOWNCOMMAND(p1, p2) ":irc.example.com 421 " + p1 + " " + p2 + " :Unknown command\r\n"
-#define ERR_ALREADYREGISTERED(p1) ":irc.example.net 462 " + p1 + " :Connection already registered\r\n"
-#define ERR_NEEDMOREPARAMS(p1, p2) ":irc.example.com 461 " + p1 + " " + p2 + " :Syntax error\r\n"
-#define ERR_PASSWDMISMATCH(p1) ":irc.example.com 464 " + p1 + " :Invalid password\r\n"
-#define ERR_NICKNAMEINUSE(p1, p2) ":irc.example.com 433 " + p1 + " " + p2 + " :Nickname already in use\r\n"
-#define ERR_ERRONEUSNICKNAME(p1, p2) ":irc.example.com 432 " + p1 + " " + p2 + " :Erroneus nickname\r\n"
+#define ERR_UNKNOWNCOMMAND(p1, p2) ":1337.ma 421 " + p1 + " " + p2 + " :Unknown command\r\n"
+#define ERR_ALREADYREGISTERED(p1) ":1337.ma 462 " + p1 + " :Connection already registered\r\n"
+#define ERR_NEEDMOREPARAMS(p1, p2) ":1337.ma 461 " + p1 + " " + p2 + " :Syntax error\r\n"
+#define ERR_PASSWDMISMATCH(p1) ":1337.ma 464 " + p1 + " :Invalid password\r\n"
+#define ERR_NICKNAMEINUSE(p1, p2) ":1337.ma 433 " + p1 + " " + p2 + " :Nickname already in use\r\n"
+#define ERR_ERRONEUSNICKNAME(p1, p2) ":1337.ma 432 " + p1 + " " + p2 + " :Erroneus nickname\r\n"
+#define ERR_NICKNAMETOOLONG(p1, p2) ":1337.ma 432 " + p1 + " " + p2 + " :Nickname too long, max. 9 characters\r\n"
+
+#define RPL_WELCOME(p1, p2) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@localhost\r\n"
+#define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
+#define RPL_CREATED(p1) ":1337.ma 003 " + p1 + " :This server has been started sometime\r\n"
+#define RPL_MYINFO(p1) ":1337.ma 004 " + p1 + " 1337.ma 1.0 o o\r\n"
+#define RPL_ISUPPORT(p1) ":1337.ma 005 " + p1 + " :CHANTYPES=# :PREFIX=(ov)@+ :NETWORK=1337\r\n"
+#define RPL_MOTDSTART(p1) ":1337.ma 375 " + p1 + " :- 1337.ma Message of the day - \r\n"
+#define RPL_MOTD(p1, p2) ":1337.ma 372 " + p1 + " :- " + p2 + "\r\n" 
+#define RPL_MOTDEND(p1) ":1337.ma 376 " + p1 + " :End of MOTD command\r\n"
 
 // DEFINES
 
+#define USERLEN 12
 #define MAX_CLIENTS 20
 #define BUFFER_SIZE 1024
 
@@ -34,6 +45,7 @@ typedef unsigned int t_port;
 // INCLUDES
 
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include <map>

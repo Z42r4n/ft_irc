@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/03 10:12:52 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 12:13:32 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@ namespace ft
 		// check if nickname is valid
 		for (size_t i = 0; i < nickname.length(); i++)
 		{
-			// check if the nickname is too long
-			if (nickname.length() > 9)
-			{
-				return false;
-			}
-			
 			//check if the nickname not start with acceptable chars
 			if (i == 0 && nickname[i] != '_' && !std::isalpha(nickname[i]))
 			{
@@ -54,6 +48,14 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 		{
 			// send irc server error message
 			sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
+			return ;
+		}
+		
+		// check if the nickname is too long
+		if (params[1].length() > 9)
+		{
+			// send irc server error message
+			sendData(fd, ERR_NICKNAMETOOLONG(clients[i][fd].getNickname(), params[1]));
 			return ;
 		}
 		
@@ -95,6 +97,15 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 		
 		// set the nickname
 		clients[i][fd].setNickname(params[1]);
+
+		// set the client as registered if the username and nickname are set
+		if (clients[i][fd].getUsername() != "" && clients[i][fd].getNickname() != "*")
+		{
+			clients[i][fd].setIsRegistered(true);
+			
+			// send welcome message
+			welcomeMessage(i, fd);
+		}
 	}
 }
 	

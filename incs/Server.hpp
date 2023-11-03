@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/31 18:21:05 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 12:10:15 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ class Server
         void receiveData(void);
         void parseData(int i, t_fd fd, std::string data);
         void sendData(t_fd fd, std::string data);
+
+        // irc replies functions
+        void welcomeMessage(int i, t_fd fd);
 
         // commands functions
         void passCommand(int i, t_fd fd, t_params params);

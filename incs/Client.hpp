@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 09:05:08 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 11:11:51 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ class Client
         
         std::string getNickname(void) const;
         std::string getUsername(void) const;
+        std::string getRealname(void) const;
         struct sockaddr_in getAddr(void) const;
         bool isRegistered(void) const;
         bool isGetPassword(void) const;
@@ -32,6 +33,7 @@ class Client
         
         void setNickname(std::string name);
         void setUsername(std::string name);
+        void setRealname(std::string name);
         void setAddr(struct sockaddr_in addr);
         void setIsRegistered(bool isRegistered);
         void setIsGetPassword(bool isGetPassword);
@@ -43,6 +45,7 @@ class Client
         std::string _username;
         std::string _password;
         bool _isRegistered;
+        // if the PASS command is executed successfully this well be true
         bool _hasPassword;
         struct sockaddr_in _addr;
         // socklen_t addrlen;

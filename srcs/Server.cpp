@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 07:58:55 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 10:31:09 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	}
 	
 	// check commands and call functions
+	// the PASS, NICK and USER commands uses to perform registration procedures for a new user
+	// the PASS command must be the first command that a client sends to a server after it has connected to the server
 	if (command == "PASS" || command == "pass")
 		passCommand(i, fd, params);
 	else if (command == "NICK" || command == "nick")
@@ -210,7 +212,7 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		userCommand(i, fd, params);
 	else if (clients[i][fd].isRegistered())
 	{
-		// send irc server error message
+		// send irc server error message if the command is unknown
 		sendData(fd, ERR_UNKNOWNCOMMAND(clients[i][fd].getNickname(), command));
 	}
 

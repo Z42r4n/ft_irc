@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 09:16:32 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 11:12:40 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void Client::setIsGetPassword(bool password)
     this->_hasPassword = password;
 }
 
+// nickname
 std::string Client::getNickname(void) const
 {
     return this->_nickname;
@@ -80,6 +81,7 @@ void Client::setNickname(std::string name)
     this->_nickname = name;
 }
 
+// username
 std::string Client::getUsername(void) const
 {
     return this->_username;
@@ -88,4 +90,15 @@ std::string Client::getUsername(void) const
 void Client::setUsername(std::string name)
 {
     this->_username = name;
+}
+
+// realname 
+std::string Client::getRealname(void) const
+{
+    return this->_realname;
+}
+
+void Client::setRealname(std::string name)
+{
+    this->_realname = name;
 }
