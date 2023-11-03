@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/31 17:36:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 09:37:28 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 #define ERR_ALREADYREGISTERED(p1) ":irc.example.net 462 " + p1 + " :Connection already registered\r\n"
 #define ERR_NEEDMOREPARAMS(p1, p2) ":irc.example.com 461 " + p1 + " " + p2 + " :Syntax error\r\n"
 #define ERR_PASSWDMISMATCH(p1) ":irc.example.com 464 " + p1 + " :Invalid password\r\n"
+#define ERR_NICKNAMEINUSE(p1, p2) ":irc.example.com 433 " + p1 + " " + p2 + " :Nickname already in use\r\n"
+#define ERR_ERRONEUSNICKNAME(p1, p2) ":irc.example.com 432 " + p1 + " " + p2 + " :Erroneus nickname\r\n"
 
 // DEFINES
 

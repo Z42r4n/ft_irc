@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/31 18:36:24 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 07:58:55 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,13 @@ Server::Server(t_port port, std::string password)
 	{
 		throw std::invalid_argument("port must be in range 6660-6669\n");   
 	}
+	
+	// check if password is empty
+	if (password.empty())
+	{
+		throw std::invalid_argument("password must not be empty\n");
+	}
+	
 	// check password, accept only printable chars
 	for (size_t i = 0; i < password.length(); i++)
 	{
@@ -30,6 +37,7 @@ Server::Server(t_port port, std::string password)
 			throw std::invalid_argument("password must be printable\n");
 		}
 	}
+	
 	this->port = port;
 	this->password = password;
 	this->nfds = 0;

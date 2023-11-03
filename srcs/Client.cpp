@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/31 08:36:45 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 09:16:32 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,14 @@ std::string Client::getNickname(void) const
 void Client::setNickname(std::string name)
 {
     this->_nickname = name;
+}
+
+std::string Client::getUsername(void) const
+{
+    return this->_username;
+}
+
+void Client::setUsername(std::string name)
+{
+    this->_username = name;
 }
