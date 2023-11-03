@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/03 12:20:57 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:18:44 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,13 @@
 
 namespace ft 
 {
+	void usage(void)
+    { 
+        std::cerr << BOLDRED << "Error:" << RESET << " invalid arguments\n" << std::endl;
+        std::cout << "Usage: " << GREEN << "./ircserv" << RESET << " [port] [password]\n" << std::endl;
+        exit (EXIT_FAILURE);
+    }
+	
 	std::vector<std::string> ft_split(std::string str, std::string delim)
 	{
 		std::vector<std::string> result;
@@ -48,13 +55,26 @@ namespace ft
 		}
 		return str.substr(1, str.length());
 	}
+
+	// display formatted date
+	void ft_getDate(char **buf)
+	{
+		time_t now = time(0);
+		struct tm tstruct;
+		
+		tstruct = *localtime(&now);
+		if (*buf)
+		{
+			strftime(*buf, 100, "%a %b %d %Y at %X (+01)", &tstruct);	
+		}
+	}
 }
 
 void Server::welcomeMessage(int i, t_fd fd)
 {
 	sendData(fd, RPL_WELCOME(clients[i][fd].getNickname(), clients[i][fd].getUsername()));
 	sendData(fd, RPL_YOURHOST(clients[i][fd].getNickname()));
-	sendData(fd, RPL_CREATED(clients[i][fd].getNickname()));
+	sendData(fd, RPL_CREATED(clients[i][fd].getNickname(), start_time));
 	sendData(fd, RPL_MYINFO(clients[i][fd].getNickname()));
 	sendData(fd, RPL_ISUPPORT(clients[i][fd].getNickname()));
 	sendData(fd, RPL_MOTDSTART(clients[i][fd].getNickname()));

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 10:31:09 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:11:06 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,22 @@
 
 Server::Server() {}
 
-Server::~Server() {}
+Server::~Server() 
+{
+	// free start_time variable
+	free(start_time);
+}
+
+Server::Server(Server const & src)
+{
+	*this = src;
+}
+
+Server & Server::operator=(Server const & src)
+{
+	(void)src;
+	return *this;
+}
 
 Server::Server(t_port port, std::string password)
 {
@@ -38,6 +53,9 @@ Server::Server(t_port port, std::string password)
 		}
 	}
 	
+	// allocate start_time variable
+	start_time = (char *)std::malloc(sizeof(char) * 100);
+	
 	this->port = port;
 	this->password = password;
 	this->nfds = 0;
@@ -55,6 +73,9 @@ void Server::run(void)
 	
 	// bind socket
 	bindSocket();
+
+	// get current time
+	ft::ft_getDate(&start_time);
 
 	// listen socket
 	listenSocket();
@@ -210,6 +231,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		nickCommand(i, fd, params);
 	else if (command == "USER" || command == "user")
 		userCommand(i, fd, params);
+	else if (command == "PONG" || command == "pong")
+		return ;
 	else if (clients[i][fd].isRegistered())
 	{
 		// send irc server error message if the command is unknown

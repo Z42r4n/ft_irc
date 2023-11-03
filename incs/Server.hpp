@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 12:10:15 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:08:19 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,11 @@ class Server
         t_fd serverfd;
         t_port port;
         std::string password;
+        char *start_time;
         struct sockaddr_in serv_addr;
         struct pollfd fds[MAX_CLIENTS + 1];
         int nfds;
         std::map<t_fd, Client> clients[MAX_CLIENTS];
         char buffer[BUFFER_SIZE];
+
 }; 

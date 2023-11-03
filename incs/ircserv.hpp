@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 12:07:09 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 13:11:28 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 #define RPL_WELCOME(p1, p2) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@localhost\r\n"
 #define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
-#define RPL_CREATED(p1) ":1337.ma 003 " + p1 + " :This server has been started sometime\r\n"
+#define RPL_CREATED(p1, p2) ":1337.ma 003 " + p1 + " :This server has been started " + p2 + "\r\n"
 #define RPL_MYINFO(p1) ":1337.ma 004 " + p1 + " 1337.ma 1.0 o o\r\n"
 #define RPL_ISUPPORT(p1) ":1337.ma 005 " + p1 + " :CHANTYPES=# :PREFIX=(ov)@+ :NETWORK=1337\r\n"
 #define RPL_MOTDSTART(p1) ":1337.ma 375 " + p1 + " :- 1337.ma Message of the day - \r\n"
@@ -46,7 +46,8 @@ typedef unsigned int t_port;
 
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <cstring>
+#include <ctime>
 
 #include <map>
 #include <vector>
@@ -69,6 +70,8 @@ namespace ft
 	// /srcs/cmds/tools.cpp
 	std::vector<std::string> ft_split(std::string str, std::string delim);
 	std::string ft_getStr(t_params params);
+	void usage(void);
+	void ft_getDate(char **buf);
 }
 
 #endif
