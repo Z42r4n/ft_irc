@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 13:11:28 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 16:32:12 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,13 @@
 #define RPL_MOTDSTART(p1) ":1337.ma 375 " + p1 + " :- 1337.ma Message of the day - \r\n"
 #define RPL_MOTD(p1, p2) ":1337.ma 372 " + p1 + " :- " + p2 + "\r\n" 
 #define RPL_MOTDEND(p1) ":1337.ma 376 " + p1 + " :End of MOTD command\r\n"
+#define ERR_NOMOTD(p1) ":1337.ma 422 " + p1 + " :MOTD File is missing\r\n"
+
+// define irc error message
+#define ERROR(p1) "ERROR :" + p1 + "\r\n"
+
+// define irc notice message
+#define NOTICE(p1) ":1337.ma NOTICE " + p1 + " :Closing Link: (Quit: " + p1 + ")\r\n"
 
 // DEFINES
 
@@ -67,7 +74,7 @@ typedef unsigned int t_port;
 // PROTOTYPES
 namespace ft 
 {
-	// /srcs/cmds/tools.cpp
+	// /srcs/utils/tools.cpp
 	std::vector<std::string> ft_split(std::string str, std::string delim);
 	std::string ft_getStr(t_params params);
 	void usage(void);

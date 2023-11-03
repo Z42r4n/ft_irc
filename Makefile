@@ -6,7 +6,7 @@
 #    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/10/31 16:25:44 by ymoutaou         ###   ########.fr        #
+#    Updated: 2023/11/03 14:10:53 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,9 +24,10 @@ SRCS		=	./irc_main.cpp			\
 				./srcs/Client.cpp		\
 				./srcs/Channel.cpp		\
 				./srcs/cmds/PASS.cpp	\
-				./srcs/cmds/tools.cpp	\
 				./srcs/cmds/NICK.cpp	\
-				./srcs/cmds/USER.cpp	
+				./srcs/cmds/USER.cpp	\
+				./srcs/cmds/QUIT.cpp	\
+				./srcs/utils/tools.cpp	
 				
 				# ./srcs/Command.cpp	\
 				# ./srcs/Message.cpp	\

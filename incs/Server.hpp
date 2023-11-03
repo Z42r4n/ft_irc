@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 13:08:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 14:07:26 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ class Server
         void passCommand(int i, t_fd fd, t_params params);
         void nickCommand(int i, t_fd fd, t_params params);
         void userCommand(int i, t_fd fd, t_params params);
+        void quitCommand(int i, t_fd fd, t_params params);
 
     private:
         t_fd serverfd;

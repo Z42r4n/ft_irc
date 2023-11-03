@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 13:11:06 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 15:44:23 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ void Server::receiveData(void)
 				{
 					close(clientFD);
 					fds[i + 1].fd = 0;
+					clients[i][clientFD] = Client();
 					std::cout << RED << "\n[-] Client disconnected, socket fd is: " << RESET << YELLOW << clientFD << RESET << "\n" << std::endl;
 				}
 				// Handle recv() error
@@ -231,6 +232,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		nickCommand(i, fd, params);
 	else if (command == "USER" || command == "user")
 		userCommand(i, fd, params);
+	else if (command == "QUIT" || command == "quit")
+		quitCommand(i, fd, params);
 	else if (command == "PONG" || command == "pong")
 		return ;
 	else if (clients[i][fd].isRegistered())

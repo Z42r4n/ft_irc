@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/03 13:18:44 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 14:08:44 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,17 +77,18 @@ void Server::welcomeMessage(int i, t_fd fd)
 	sendData(fd, RPL_CREATED(clients[i][fd].getNickname(), start_time));
 	sendData(fd, RPL_MYINFO(clients[i][fd].getNickname()));
 	sendData(fd, RPL_ISUPPORT(clients[i][fd].getNickname()));
-	sendData(fd, RPL_MOTDSTART(clients[i][fd].getNickname()));
 
 	// read the motd file ircserv.motd
-	std::ifstream motdFile("./srcs/cmds/ircserv.motd");
+	std::ifstream motdFile("./srcs/motd/ircserv.motd");
 	std::string line;
 	
 	// send the motd file line by line
 	if (motdFile.is_open())
 	{
+		sendData(fd, RPL_MOTDSTART(clients[i][fd].getNickname()));
 		while (getline(motdFile, line))
 		{
+			// send the motd file line by line
 			sendData(fd,RPL_MOTD(clients[i][fd].getNickname(), line));
 		}
 		motdFile.close();
@@ -95,6 +96,7 @@ void Server::welcomeMessage(int i, t_fd fd)
 	}
 	else
 	{
-		throw std::runtime_error("Unable to open file ircserv.motd\n");
+		// send MOTD file is missing
+		sendData(fd, ERR_NOMOTD(clients[i][fd].getNickname()));
 	}
 }
