@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/03 14:08:44 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/03 17:04:34 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 namespace ft 
 {
-	void usage(void)
+	void ft_usage(void)
     { 
         std::cerr << BOLDRED << "Error:" << RESET << " invalid arguments\n" << std::endl;
         std::cout << "Usage: " << GREEN << "./ircserv" << RESET << " [port] [password]\n" << std::endl;

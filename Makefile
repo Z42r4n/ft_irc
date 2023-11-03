@@ -6,10 +6,26 @@
 #    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/11/03 14:10:53 by ymoutaou         ###   ########.fr        #
+#    Updated: 2023/11/03 17:39:59 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+# define colors
+GREEN		=	\033[0;32m
+RED			=	\033[0;31m
+YELLOW		=	\033[0;33m
+BLUE		=	\033[0;34m
+MAGENTA		=	\033[0;35m
+CYAN		=	\033[0;36m
+RESET		=	\033[0m
+
+# define text style
+BOLD		=	\033[1m
+DIM			=	\033[2m
+UNDERLINED	=	\033[4m
+BLINK		=	\033[5m
+
+# define headers
 INCS		=	./incs/Server.hpp		\
 				./incs/Colors.hpp		\
 				./incs/Client.hpp		\
@@ -19,6 +35,7 @@ INCS		=	./incs/Server.hpp		\
 				# ./incs/Command.hpp	\
 				# ./incs/Message.hpp	\
 
+# define sources
 SRCS		=	./irc_main.cpp			\
 				./srcs/Server.cpp		\
 				./srcs/Client.cpp		\
@@ -33,28 +50,47 @@ SRCS		=	./irc_main.cpp			\
 				# ./srcs/Message.cpp	\
 
 
+# define objects
 OBJS		=	$(SRCS:.cpp=.o)
 
+# define executable
 NAME		=	ircserv
+
+# define flags
 CXXFLAGS	=	-Wall -Wextra -Werror -std=c++98
 CXX			= 	c++
 RM 		    = 	rm -rf
 
+# define includes
 HEADER		=	./incs
 
-all			: $(NAME)
+all			: logo $(NAME)
+
+logo		:
+				@echo "$(CYAN)"
+				@if [ -f /usr/bin/figlet ]; then \
+					figlet -f slant "IRC SERVER"; \
+				else \
+					echo "[ IRC SERVER ]"; \
+				fi
+				@echo "$(RESET)"
 
 $(NAME)		:	$(OBJS)
-				$(CXX) $(CXXFLAGS) $(OBJS)  -o $(NAME)
+				@echo "$(YELLOW)Linking . . . $(RESET)[$(CYAN)$(BOLD)$(NAME)$(RESET)]"
+				@echo "Create [$(CYAN)$(BOLD)$(NAME)$(RESET)] executable $(GREEN)successfully!$(RESET)"
+				@$(CXX) $(CXXFLAGS) $(OBJS)  -o $(NAME)
 
 %.o			:	%.cpp $(INCS)
-				$(CXX) $(CXXFLAGS) -I $(HEADER) -c $< -o $@
+				@echo "$(GREEN)$(UNDERLINED)Compiling . . .$(RESET) [$(MAGENTA)$<$(RESET)] -> [$(YELLOW)$@$(RESET)]"
+				@$(CXX) $(CXXFLAGS) -I $(HEADER) -c $< -o $@
 
 clean		:
-				$(RM) $(OBJS)
+				@echo "$(RED)Cleaning . . . $(RESET)[$(YELLOW)$(BLINK)$(OBJS)$(RESET)]"
+				@$(RM) $(OBJS)
 
 fclean		:	clean
-				$(RM) $(NAME)
+				@echo "$(RED)Removing . . . $(RESET)[$(CYAN)$(BLINK)$(NAME)$(RESET)]"
+				@$(RM) $(NAME)
 
 re			:	fclean all
 
