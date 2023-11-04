@@ -6,7 +6,7 @@
 #    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/11/03 17:39:59 by ymoutaou         ###   ########.fr        #
+#    Updated: 2023/11/04 09:39:22 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRCS		=	./irc_main.cpp			\
 				./srcs/cmds/NICK.cpp	\
 				./srcs/cmds/USER.cpp	\
 				./srcs/cmds/QUIT.cpp	\
+				./srcs/cmds/BIMO.cpp	\
 				./srcs/utils/tools.cpp	
 				
 				# ./srcs/Command.cpp	\
@@ -68,28 +69,30 @@ all			: logo $(NAME)
 
 logo		:
 				@echo "$(CYAN)"
-				@if [ -f /usr/bin/figlet ]; then \
-					figlet -f slant "IRC SERVER"; \
+				@if [ -x /Users/ymoutaou/figlet/figlet ]; then \
+					/Users/ymoutaou/figlet/figlet -f /Users/ymoutaou/figlet/fonts/slant "IRC SERVER"; \
+					echo "By [ymoutaou] and [houadou]"; \
 				else \
 					echo "[ IRC SERVER ]"; \
+					echo "By [ymoutaou] and [houadou]"; \
 				fi
 				@echo "$(RESET)"
 
 $(NAME)		:	$(OBJS)
-				@echo "$(YELLOW)Linking . . . $(RESET)[$(CYAN)$(BOLD)$(NAME)$(RESET)]"
+				@echo "$(YELLOW)Linking   . . . $(RESET)[$(CYAN)$(BOLD)$(NAME)$(RESET)]"
 				@echo "Create [$(CYAN)$(BOLD)$(NAME)$(RESET)] executable $(GREEN)successfully!$(RESET)"
 				@$(CXX) $(CXXFLAGS) $(OBJS)  -o $(NAME)
 
 %.o			:	%.cpp $(INCS)
-				@echo "$(GREEN)$(UNDERLINED)Compiling . . .$(RESET) [$(MAGENTA)$<$(RESET)] -> [$(YELLOW)$@$(RESET)]"
+				@echo "$(GREEN)Compiling . . .$(RESET) [$(MAGENTA)$<$(RESET)] -> [$(YELLOW)$@$(RESET)]"
 				@$(CXX) $(CXXFLAGS) -I $(HEADER) -c $< -o $@
 
 clean		:
-				@echo "$(RED)Cleaning . . . $(RESET)[$(YELLOW)$(BLINK)$(OBJS)$(RESET)]"
+				@echo "$(RED)Cleaning . . . $(RESET)[$(YELLOW)$(OBJS)$(RESET)]"
 				@$(RM) $(OBJS)
 
-fclean		:	clean
-				@echo "$(RED)Removing . . . $(RESET)[$(CYAN)$(BLINK)$(NAME)$(RESET)]"
+fclean		:	logo clean
+				@echo "$(RED)Removing . . . $(RESET)[$(BLINK)$(NAME)$(RESET)]"
 				@$(RM) $(NAME)
 
 re			:	fclean all

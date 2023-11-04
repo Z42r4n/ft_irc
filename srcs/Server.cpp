@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 15:44:23 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 09:23:01 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		userCommand(i, fd, params);
 	else if (command == "QUIT" || command == "quit")
 		quitCommand(i, fd, params);
+	else if (command == "BIMO" || command == "bimo")
+		bimoCommand(i, fd, params);
 	else if (command == "PONG" || command == "pong")
 		return ;
 	else if (clients[i][fd].isRegistered())

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/03 17:04:34 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 11:41:05 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,20 @@ namespace ft
 		{
 			strftime(*buf, 100, "%a %b %d %Y at %X (+01)", &tstruct);	
 		}
+	}
+
+	// get the string from the index
+	std::string ft_getStrFromIndex(int index, t_params params)
+	{
+		std::string str = "";
+
+		for (int i = index; i < (int)params.size(); i++)
+		{
+			str += params[i];
+			if (i != (int)params.size() - 1)
+				str += "+";
+		}
+		return str;
 	}
 }
 

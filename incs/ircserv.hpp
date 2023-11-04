@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 17:04:16 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 11:40:26 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ namespace ft
 	std::string ft_getStr(t_params params);
 	void ft_usage(void);
 	void ft_getDate(char **buf);
+	std::string ft_getStrFromIndex(int index, t_params params);
 }
 
 #endif
