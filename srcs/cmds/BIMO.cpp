@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 09:16:47 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/04 11:40:33 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 13:17:06 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void Server::bimoCommand(int i, t_fd fd, t_params params)
 	else if (params[1] == "fonts" || params[1] == "FONTS")
 		api = "curl -s \'https://figlet-api.onrender.com/fonts\' | jq -r \'.[]\' | tr \' \' \'\n\'";
 	else if (params[1] == "weather" || params[1] == "WEATHER")
-		api = "curl -s \'wttr.in/{Rabat,London,Berlin,Madrid,Paris,Moscow,Oslo,Beijing}?format=3\'";
+		api = "curl -s \'wttr.in/{Rabat,London,Berlin,Madrid,Paris,Moscow,Oslo,Beijing,Ottawa}?format=3\'";
 	else
 	{
 		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
@@ -44,8 +44,10 @@ void Server::bimoCommand(int i, t_fd fd, t_params params)
 	std::ifstream file("api.txt");
 	std::string line;
 
+	// send the motd message to the client
+	sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), "BIMO BOT RESPONSE: ------------------"));
+
 	// read the file line by line ans send the output to the client
-	sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), "BIMO BOT RESPONSE:"));
 	while (std::getline(file, line))
 	{
 		sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), line));
