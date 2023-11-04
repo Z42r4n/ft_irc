@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/03 11:11:51 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 15:14:03 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ class Client
         bool isRegistered(void) const;
         bool isGetPassword(void) const;
         bool isOperator(void) const;
+        t_fd getFd(void) const;
         // socklen_t getAddrLen(void) const;
         
         void setNickname(std::string name);
@@ -38,8 +39,10 @@ class Client
         void setIsRegistered(bool isRegistered);
         void setIsGetPassword(bool isGetPassword);
         void setIsOperator(bool isOperator);
+        void setFd(t_fd fd);
         
     private:
+        t_fd _fd;
         std::string _nickname;
         std::string _realname;
         std::string _username;

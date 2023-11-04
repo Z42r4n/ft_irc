@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 11:44:32 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 14:52:51 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 #include <ircserv.hpp>
 
 class Client;
+class Channel;
 
 typedef std::map<t_fd, Client>::iterator t_clients_it;
+typedef std::vector<Channel>::iterator t_channels_it;
 typedef std::vector<std::string> t_params;
 
 class Server
@@ -60,6 +62,8 @@ class Server
         struct pollfd fds[MAX_CLIENTS + 1];
         int nfds;
         std::map<t_fd, Client> clients[MAX_CLIENTS];
+        std::vector<Channel> channels[MAX_CHANNELS];
+        int nbChannels;
         char buffer[BUFFER_SIZE];
 
 }; 

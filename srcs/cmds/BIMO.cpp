@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 09:16:47 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/04 13:17:06 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 14:07:24 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,23 @@ void Server::bimoCommand(int i, t_fd fd, t_params params)
 	std::string line;
 
 	// send the motd message to the client
-	sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), "BIMO BOT RESPONSE: ------------------"));
+	sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), "BIMO BOT RESPONSE ------------------"));
 
 	// read the file line by line ans send the output to the client
-	while (std::getline(file, line))
+	if (file.is_open() && file.good())
 	{
-		sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), line));
+		while (std::getline(file, line))
+		{
+			sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), line));
+		}
 	}
+	else
+	{
+		// send the motd message to the client
+		sendData(fd, ERROR(std::string("BIMO BOT RESPONSE: API NOT FOUND")));
+	}
+	
+	sendData(fd, RPL_MOTD(clients[i][fd].getNickname(), "BIMO RESPONSE END ------------------"));
 	
 	// close the file
 	file.close();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/10/24 15:00:28 by zarran           ###   ########.fr       */
+/*   Updated: 2023/11/04 15:21:51 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,21 @@ class Channel
         Channel(std::string name);
         
         std::string getName(void) const;
+        std::string getPassword(void) const;
+        std::vector<Client> getClients(void) const;
         
+   
         void setName(std::string name);
+        void setPassword(std::string password);
+
+        // add client
+        void addClient(Client &client);
+        // add operator
+        void addOperator(Client &client);
         
     private:
         std::string name;
+        std::string password;
+        std::vector<Client> clients;
+        std::vector<Client> operators;
 };

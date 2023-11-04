@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/04 11:41:05 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 14:07:09 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void Server::welcomeMessage(int i, t_fd fd)
 	std::string line;
 	
 	// send the motd file line by line
-	if (motdFile.is_open())
+	if (motdFile.is_open() && motdFile.good())
 	{
 		sendData(fd, RPL_MOTDSTART(clients[i][fd].getNickname()));
 		while (getline(motdFile, line))

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 11:44:45 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/04 15:15:19 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ Server::Server(t_port port, std::string password)
 	this->port = port;
 	this->password = password;
 	this->nfds = 0;
+	this->nbChannels = 0;
 }
 
 t_port Server::getPort(void) const
@@ -150,6 +151,7 @@ void Server::acceptSockets(void)
 			// accept the connection
 			newfd = accept(serverfd, (struct sockaddr *)&clientaddr, &addr_size);
 			newClient.setAddr(clientaddr);
+			clients[nfds][newfd].setFd(newfd);
 			clients[nfds][newfd] = newClient;
 			fds[nfds + 1].fd = newfd;
 			fds[nfds + 1].events = POLLIN;
