@@ -6,7 +6,7 @@
 #    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/11/05 08:51:49 by ymoutaou         ###   ########.fr        #
+#    Updated: 2023/11/05 13:21:47 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,6 +46,7 @@ SRCS		=	./irc_main.cpp			\
 				./srcs/cmds/QUIT.cpp	\
 				./srcs/cmds/BIMO.cpp	\
 				./srcs/cmds/JOIN.cpp	\
+				./srcs/cmds/MODE.cpp	\
 				./srcs/utils/tools.cpp	
 				
 				# ./srcs/Command.cpp	\

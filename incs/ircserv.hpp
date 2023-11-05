@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 15:20:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 11:45:50 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 #define ERR_NOTREGISTERED(p1) ":1337.ma 451 " + p1 + " :Connection not registered\r\n"
 #define ERR_NOMOTD(p1) ":1337.ma 422 " + p1 + " :MOTD File is missing\r\n"
 #define ERR_TOOMANYCHANNELS(p1, p2) ":1337.ma 405 " + p1 + " " + p2 + " :You have joined too many channels\r\n"
+#define ERR_NOSUCHCHANNEL(p1, p2) ":1337.ma 403 " + p1 + " " + p2 + " :No such channel\r\n"
 
 #define RPL_WELCOME(p1, p2) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@localhost\r\n"
 #define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
@@ -35,6 +36,7 @@
 #define RPL_MOTDEND(p1) ":1337.ma 376 " + p1 + " :End of MOTD command\r\n"
 #define RPL_NAMREPLY(p1, p2, p3) ":1337.ma 353 " + p1 + " = " + p2 + " :" + p3 + "\r\n"
 #define RPL_ENDOFNAMES(p1, p2) ":1337.ma 366 " + p1 + " " + p2 + " :End of NAMES list\r\n"
+#define RPL_NAMREPLY(p1, p2, p3) ":1337.ma 353 " + p1 + " = " + p2 + " :" + p3 + "\r\n"
 
 // define irc error message
 #define ERROR(p1) "ERROR :" + p1 + "\r\n"

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 07:58:04 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 13:19:46 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@ Server::~Server()
 {
 	// free start_time variable
 	free(start_time);
+
+	// free channels vector
+	delete channels;
 }
 
 // copy constructor
@@ -58,6 +61,8 @@ Server::Server(t_port port, std::string password)
 			throw std::invalid_argument("password must be printable\n");
 		}
 	}
+	// allocat chahnels vector
+	channels = new std::vector<Channel *>();
 	
 	// allocate start_time variable
 	start_time = (char *)std::malloc(sizeof(char) * 100);
@@ -191,8 +196,8 @@ void Server::receiveData(void)
 				{
 					buffer[rcv] = '\0';
 					// parse data
-					parseData(i, clientFD, buffer);
 					printf("%s\n", buffer);
+					parseData(i, clientFD, buffer);
 				}
 				// Client disconnected
 				else if (rcv == 0)
@@ -251,6 +256,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		bimoCommand(i, fd, params);
 	else if (command == "JOIN" || command == "join")
 		joinCommand(i, fd, params);
+	else if (command == "MODE" || command == "mode")
+		modeCommand(i, fd, params);
 	else if (command == "PONG" || command == "pong")
 		return ;
 	else if (clients[i][fd].isRegistered())

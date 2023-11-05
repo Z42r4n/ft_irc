@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 08:17:35 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 13:29:50 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 // default constructor
 Channel::Channel() 
 {
-    this->name = "";
+    this->name = "*";
     this->key = "";
     this->maxClients = 0;
 }
 
 // destructor
-Channel::~Channel() {}
+Channel::~Channel() 
+{
+
+}
 
 // copy constructor
 Channel::Channel(Channel const & src)
@@ -84,4 +87,28 @@ void Channel::addOperator(Client &client)
 std::vector<Client> Channel::getClients(void) const
 {
     return this->clients;
+}
+
+// list clients
+std::string Channel::listClients(void) const
+{
+    std::string list;
+    for (size_t i = 0; i < this->clients.size(); i++)
+    {
+        list += this->clients[i].getNickname();
+        if (i < this->clients.size() - 1)
+            list += " ";
+    }
+    return list;
+}
+
+// check if client exist
+bool Channel::clientExist(Client &client)
+{
+    for (size_t i = 0; i < this->clients.size(); i++)
+    {
+        if (this->clients[i].getNickname() == client.getNickname())
+            return true;
+    }
+    return false;
 }

@@ -6,11 +6,25 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/04 15:23:56 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 13:47:13 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
+
+bool Server::channelExist(std::string channelName)
+{
+	// check if the channel exist
+	for (size_t i = 0; i < channels->size(); i++)
+	{
+		// print channel name and channel name in the vector
+		std::cout << "channelName: " << channelName << std::endl;
+		std::cout << "channels->at(i)->getName(): " <<  <<channels->at(i)->getName() << std::endl;
+		if (channels->at(i)->getName() == channelName)
+			return true;
+	}
+	return false;
+}
 
 void Server::joinCommand(int i, t_fd fd, t_params params)
 {
@@ -23,55 +37,61 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 	}
 
 	// check if invalid number of params
-	if (params.size() > 3)
+	if (params.size() < 2 || params.size() > 3)
 	{
 		// send irc server error message
 		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
 		return ;
 	}
 
-	// create a channel object
-	Channel channel;
-
-	// channel name
-	std::string channelName = params[1];
-	// if channel name dose not start with '#', add '#' to the channel name
-	if (channelName[0] != '#')
-		channelName = "#" + channelName;
-
-	// add the channel name to the channel object
-	channel.setName(channelName);
-	// add the client to the channel
-	channel.addClient(clients[i][fd]);
-	// add the first client to the operator list
-	channel.addOperator(clients[i][fd]);
-	// add channel to the channels vector
-	if (nbChannels < MAX_CHANNELS)
-	{
-		channels[nbChannels].push_back(channel);
-		nbChannels++;
-	}
-	else
+	// check if the name of channe not start with '#'
+	if (params[1][0] != '#')
 	{
 		// send irc server error message
-		sendData(fd, ERR_TOOMANYCHANNELS(clients[i][fd].getNickname(), channelName));
+		sendData(fd, ERR_NOSUCHCHANNEL(clients[i][fd].getNickname(), params[1]));
 		return ;
 	}
 	
-	// send irc server message
-	
-	// send join message to all clients in the channel
-	for (size_t j = 0; j < channels[nbChannels - 1].size(); j++)
+	// the channel not exist
+	if (!channelExist(params[1]))
 	{
-		for (size_t k = 0; k < channels[nbChannels - 1][j].getClients().size(); k++)
+		// create new channel
+		Channel channel;
+		
+		// set channel name of cchannel
+		channel.setName(params[1]);
+		
+		// add the client to the channel
+		channel.addClient(clients[i][fd]);
+
+		// add channel to the channels vector
+		if (nbChannels < MAX_CHANNELS)
 		{
-			sendData(channels[nbChannels - 1][j].getClients()[k].getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), channelName));
+			channels->push_back(&channel);
+			nbChannels++;
 		}
+		else
+		{
+			// send irc server error message
+			sendData(fd, ERR_TOOMANYCHANNELS(clients[i][fd].getNickname(), params[1]));
+			return ;
+		}
+		
+		// send irc server message
+		sendData(fd, JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
+		sendData(fd, RPL_NAMREPLY(clients[i][fd].getNickname(), params[1], channel.listClients()));
+		sendData(fd, RPL_ENDOFNAMES(clients[i][fd].getNickname(), params[1]));
+		return ;
 	}
-	
-	
-	// sendData(fd, RPL_TOPIC(clients[i][fd].getNickname(), channelName, channel.getTopic()));
-	// sendData(fd, RPL_NAMREPLY(clients[i][fd].getNickname(), channelName, channel.getClients()));
-	sendData(fd, RPL_ENDOFNAMES(clients[i][fd].getNickname(), channelName));
+
+	// here the channel exist
+
+	// check if the client is already in the channel
+	if (!channels->at(nbChannels)->clientExist(clients[i][fd]))
+	{
+		// send irc server error message
+		sendData(fd, ERR_TOOMANYCHANNELS(clients[i][fd].getNickname(), params[1]));
+		return ;
+	}
 }
 

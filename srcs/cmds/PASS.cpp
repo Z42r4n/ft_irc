@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 14:33:35 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/10/31 19:00:53 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 09:52:10 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void Server::passCommand(int i, t_fd fd, t_params params)
 	std::string pass = params[1];
 	
 	// check if the client is already registered
-	if (clients[i][fd].isRegistered())
+	if (clients[i][fd].isGetPassword())
 	{
 		// send irc server error message
 		sendData(fd, ERR_ALREADYREGISTERED(clients[i][fd].getNickname()));

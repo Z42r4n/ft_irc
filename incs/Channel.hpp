@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 08:12:06 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 13:29:25 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ class Channel
         
         std::string getName(void) const;
         std::string getKey(void) const;
+        std::string listClients(void) const;
         std::vector<Client> getClients(void) const;
         
    
@@ -35,6 +36,8 @@ class Channel
         void addClient(Client &client);
         // add operator
         void addOperator(Client &client);
+        // check if client exist
+        bool clientExist(Client &client);
         
     private:
         std::string name;

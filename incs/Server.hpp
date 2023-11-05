@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 07:56:58 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 13:18:27 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ class Server
         // irc replies functions
         void welcomeMessage(int i, t_fd fd);
 
+        // check channel exist
+        bool channelExist(std::string channelName);
+
         // commands functions
         void passCommand(int i, t_fd fd, t_params params);
         void nickCommand(int i, t_fd fd, t_params params);
@@ -55,6 +58,7 @@ class Server
         void quitCommand(int i, t_fd fd, t_params params);
         void bimoCommand(int i, t_fd fd, t_params params);
         void joinCommand(int i, t_fd fd, t_params params);
+        void modeCommand(int i, t_fd fd, t_params params);
 
     private:
         t_fd serverfd;
@@ -65,7 +69,7 @@ class Server
         struct pollfd fds[MAX_CLIENTS + 1];
         int nfds;
         std::map<t_fd, Client> clients[MAX_CLIENTS];
-        std::vector<Channel> channels[MAX_CHANNELS];
+        std::vector<Channel *> *channels;
         int nbChannels;
         char buffer[BUFFER_SIZE];
 
