@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 13:19:46 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 15:44:57 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ Server::~Server()
 {
 	// free start_time variable
 	free(start_time);
-
-	// free channels vector
-	delete channels;
 }
 
 // copy constructor
@@ -34,7 +31,21 @@ Server::Server(Server const & src)
 // assignment operator
 Server & Server::operator=(Server const & src)
 {
-	(void)src;
+	if (this != &src)
+	{
+		this->serverfd = src.serverfd;
+		this->port = src.port;
+		this->password = src.password;
+		this->serverfd = src.serverfd;
+		this->serv_addr = src.serv_addr;
+		this->nfds = src.nfds;
+		this->nbChannels = src.nbChannels;
+		for (int i = 0; i < MAX_CLIENTS; i++)
+		{
+			this->clients[i] = src.clients[i];
+		}
+		this->start_time = src.start_time;
+	}
 	return *this;
 }
 
@@ -61,8 +72,6 @@ Server::Server(t_port port, std::string password)
 			throw std::invalid_argument("password must be printable\n");
 		}
 	}
-	// allocat chahnels vector
-	channels = new std::vector<Channel *>();
 	
 	// allocate start_time variable
 	start_time = (char *)std::malloc(sizeof(char) * 100);
@@ -167,7 +176,7 @@ void Server::acceptSockets(void)
 			// accept the connection
 			newfd = accept(serverfd, (struct sockaddr *)&clientaddr, &addr_size);
 			newClient.setAddr(clientaddr);
-			clients[nfds][newfd].setFd(newfd);
+			newClient.setFd(newfd);
 			clients[nfds][newfd] = newClient;
 			fds[nfds + 1].fd = newfd;
 			fds[nfds + 1].events = POLLIN;

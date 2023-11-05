@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 11:45:50 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 16:08:06 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,17 @@
 
 typedef int t_fd;
 typedef unsigned int t_port;
+
+// ENUMS
+// broadcast message type: JOIN, PART, QUIT, NICK, MSG
+enum e_msgType
+{
+	_JOIN,
+	_PART,
+	_QUIT,
+	_NICK,
+	_MSG
+};
 
 // INCLUDES
 

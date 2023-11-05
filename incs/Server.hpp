@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 13:18:27 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 16:11:16 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ class Server
         void welcomeMessage(int i, t_fd fd);
 
         // check channel exist
-        bool channelExist(std::string channelName);
+        int channelExist(std::string channelName);
+
+        // broadcast message to all clients in channel
+        void channelBroadcast(int i, t_fd fd, t_params params, size_t channelIndex, int type);
 
         // commands functions
         void passCommand(int i, t_fd fd, t_params params);
@@ -69,7 +72,7 @@ class Server
         struct pollfd fds[MAX_CLIENTS + 1];
         int nfds;
         std::map<t_fd, Client> clients[MAX_CLIENTS];
-        std::vector<Channel *> *channels;
+        std::vector<Channel> channels;
         int nbChannels;
         char buffer[BUFFER_SIZE];
 

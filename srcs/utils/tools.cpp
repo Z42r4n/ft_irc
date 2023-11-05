@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/04 14:07:09 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 16:16:18 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 namespace ft 
 {
+	// the usage message
 	void ft_usage(void)
     { 
         std::cerr << BOLDRED << "Error:" << RESET << " invalid arguments\n" << std::endl;
@@ -21,6 +22,7 @@ namespace ft
         exit (EXIT_FAILURE);
     }
 	
+	// split string by delim
 	std::vector<std::string> ft_split(std::string str, std::string delim)
 	{
 		std::vector<std::string> result;
@@ -36,6 +38,7 @@ namespace ft
 		return result;
 	}
 
+	// get the string after the first :
 	std::string ft_getStr(t_params params)
 	{
 		std::string str = "";
@@ -84,6 +87,7 @@ namespace ft
 	}
 }
 
+// welcome message, Server.hpp
 void Server::welcomeMessage(int i, t_fd fd)
 {
 	sendData(fd, RPL_WELCOME(clients[i][fd].getNickname(), clients[i][fd].getUsername()));
@@ -112,5 +116,29 @@ void Server::welcomeMessage(int i, t_fd fd)
 	{
 		// send MOTD file is missing
 		sendData(fd, ERR_NOMOTD(clients[i][fd].getNickname()));
+	}
+}
+
+// check if the channel exist and return the index of the channel
+int Server::channelExist(std::string channelName)
+{
+	// check if the channel exist
+	for (size_t i = 0; i < channels.size(); i++)
+	{
+		if (channels[i].getName() == channelName)
+			return i;
+	}
+	return -1;
+}
+
+// broadcast message to all clients in channel
+void Server::channelBroadcast(int i, t_fd fd, t_params params, size_t channelIndex, int type)
+{
+	if (type == _JOIN)
+	{
+		for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
+		{
+			sendData(channels[channelIndex].getClients()[j].getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
+		}
 	}
 }

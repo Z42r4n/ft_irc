@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 13:29:50 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 14:08:54 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,14 @@ Channel::Channel(Channel const & src)
 // assignment operator
 Channel & Channel::operator=(Channel const & src)
 {
-    (void)src;
+    if (this != &src)
+    {
+        this->name = src.name;
+        this->key = src.key;
+        this->maxClients = src.maxClients;
+        this->clients = src.clients;
+        this->operators = src.operators;
+    }
     return *this;
 }
 

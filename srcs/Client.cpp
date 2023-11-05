@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 08:00:10 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 15:41:48 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 Client::Client()
 {
+    this->_fd = -1;
     this->_isRegistered = false;
     this->_hasPassword = false;
     this->_nickname = "*";
@@ -37,6 +38,7 @@ Client & Client::operator=(Client const & src)
 {
     if (this != &src)
     {
+        this->_fd = src._fd;
         this->_isRegistered = src._isRegistered;
         this->_nickname = src._nickname;
         this->_realname = src._realname;
