@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 15:41:48 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 17:24:38 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ Client::Client()
     this->_nickname = "*";
     this->_realname = "";
     this->_username = "";
+    this->_channels = std::vector<size_t>();
 }
 
 // destructor
@@ -43,6 +44,7 @@ Client & Client::operator=(Client const & src)
         this->_nickname = src._nickname;
         this->_realname = src._realname;
         this->_username = src._username;
+        this->_channels = src._channels;
     }
     return *this;
 }
@@ -123,4 +125,16 @@ t_fd Client::getFd(void) const
 void Client::setFd(t_fd fd)
 {
     this->_fd = fd;
+}
+
+// add channel name to the vector
+void Client::addChannel(size_t channelIndex)
+{
+    this->_channels.push_back(channelIndex);
+}
+
+// get channels
+std::vector<size_t> Client::getChannels(void) const
+{
+    return this->_channels;
 }

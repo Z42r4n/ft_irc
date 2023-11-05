@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 16:08:06 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 17:28:55 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@
 
 // this form :ee!~cc@localhost JOIN :#general
 #define JOIN(p1, p2, p3) ":" + p1 + "!~" + p2 + "@localhost JOIN :" + p3 + "\r\n"
+
+#define NICK(p1, p2, p3) ":" + p1 + "!~" + p2 + "@localhost NICK :" + p3 + "\r\n"
 
 // DEFINES
 
@@ -101,6 +103,7 @@ namespace ft
 	void ft_usage(void);
 	void ft_getDate(char **buf);
 	std::string ft_getStrFromIndex(int index, t_params params);
+	bool isNicknameValid(std::string nickname);
 }
 
 #endif

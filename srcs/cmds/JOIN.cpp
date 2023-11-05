@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/05 16:15:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 17:22:16 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,12 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 		// set channel name of cchannel
 		channel.setName(params[1]);
 		
+		// add the name of the channel to the channels vector
+		clients[i][fd].addChannel(channelIndex);
+		
 		// add the client to the channel
 		channel.addClient(clients[i][fd]);
-
+		
 		// add channel to the channels vector
 		if (nbChannels < MAX_CHANNELS)
 		{
@@ -82,22 +85,14 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 		return ;
 	}
 	
+	// add the name of the channel to the channels vector
+	clients[i][fd].addChannel(channelIndex);
+	
 	// add the client to the channel
 	channels[channelIndex].addClient(clients[i][fd]);
 	
-	// send irc server message
-	
-	// send JOIN message to all clients in the channel
-	// print the number of clients in the channel
-
-	// make a channel brodcast function take the channel and pointer to send data function
-	
+	// send irc server message to clients in the channel
 	channelBroadcast(i, fd, params, channelIndex, _JOIN);
-	
-	// for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
-	// {
-	// 	sendData(channels[channelIndex].getClients()[j].getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
-	// }
 	
 	sendData(fd, RPL_NAMREPLY(clients[i][fd].getNickname(), params[1], channels[channelIndex].listClients()));
 	sendData(fd, RPL_ENDOFNAMES(clients[i][fd].getNickname(), params[1]));

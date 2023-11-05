@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/05 16:16:18 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 17:30:14 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,30 @@ namespace ft
         std::cout << "Usage: " << GREEN << "./ircserv" << RESET << " [port] [password]\n" << std::endl;
         exit (EXIT_FAILURE);
     }
+
+	// check if the nickname is valid
+	bool isNicknameValid(std::string nickname)
+	{
+		std::string chars = "[]\\`_^{|}";
+		
+		// check if nickname is valid
+		for (size_t i = 0; i < nickname.length(); i++)
+		{
+			//check if the nickname not start with acceptable chars
+			if (i == 0 && nickname[i] != '_' && !std::isalpha(nickname[i]))
+			{
+				return false;
+			}
+			
+			// check if the nickname contains only acceptable chars
+			if (!std::isalnum(nickname[i]) && chars.find(nickname[i]) == std::string::npos)
+			{
+				return false;
+			}
+		}
+		
+		return true;
+	}
 	
 	// split string by delim
 	std::vector<std::string> ft_split(std::string str, std::string delim)
@@ -141,4 +165,25 @@ void Server::channelBroadcast(int i, t_fd fd, t_params params, size_t channelInd
 			sendData(channels[channelIndex].getClients()[j].getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
 		}
 	}
+	else if (type == _NICK)
+	{
+		for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
+		{
+			sendData(channels[channelIndex].getClients()[j].getFd(), NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
+		}
+	}
+	// else if (type == _QUIT)
+	// {
+	// 	for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
+	// 	{
+	// 		sendData(channels[channelIndex].getClients()[j].getFd(), QUIT(clients[i][fd].getNickname(), ft_getStr(params)));
+	// 	}
+	// }
+	// else if (type == _PART)
+	// {
+	// 	for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
+	// 	{
+	// 		sendData(channels[channelIndex].getClients()[j].getFd(), PART(clients[i][fd].getNickname(), params[1]));
+	// 	}
+	// }
 }

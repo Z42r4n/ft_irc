@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 08:02:39 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 17:24:21 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,11 @@ class Client
         bool isGetPassword(void) const;
         bool isOperator(void) const;
         t_fd getFd(void) const;
-        // socklen_t getAddrLen(void) const;
+        std::vector<size_t> getChannels(void) const;
         
+        // add channel index to the vector
+        void addChannel(size_t channelIndex);
+
         // setters
         void setNickname(std::string name);
         void setUsername(std::string name);
@@ -54,5 +57,8 @@ class Client
         // if the PASS command is executed successfully this well be true
         bool _hasPassword;
         struct sockaddr_in _addr;
-        // socklen_t addrlen;
+        
+        // store the channels names that the client joined
+        std::vector<size_t> _channels;
+
 };
