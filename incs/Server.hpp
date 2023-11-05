@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 14:52:51 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 07:56:58 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,16 @@
 
 #include <ircserv.hpp>
 
+// forward declarations
 class Client;
 class Channel;
 
+// typedefs
 typedef std::map<t_fd, Client>::iterator t_clients_it;
 typedef std::vector<Channel>::iterator t_channels_it;
 typedef std::vector<std::string> t_params;
 
+// class Server
 class Server
 {
     public:

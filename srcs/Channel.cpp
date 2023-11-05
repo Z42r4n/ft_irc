@@ -6,30 +6,42 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 15:21:38 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 08:17:35 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
 
-Channel::Channel() {}
+// default constructor
+Channel::Channel() 
+{
+    this->name = "";
+    this->key = "";
+    this->maxClients = 0;
+}
 
+// destructor
 Channel::~Channel() {}
 
+// copy constructor
 Channel::Channel(Channel const & src)
 {
     *this = src;
 }
 
+// assignment operator
 Channel & Channel::operator=(Channel const & src)
 {
     (void)src;
     return *this;
 }
 
-Channel::Channel(std::string name)
+// constructor with parameters
+Channel::Channel(std::string name, std::string key, size_t maxClients)
 {
     this->name = name;
+    this->key = key;
+    this->maxClients = maxClients;
 }
 
 // get name
@@ -45,15 +57,15 @@ void Channel::setName(std::string name)
 }
 
 // get password
-std::string Channel::getPassword(void) const
+std::string Channel::getKey(void) const
 {
-    return this->password;
+    return this->key;
 }
 
 //get password
-void Channel::setPassword(std::string password)
+void Channel::setKey(std::string key)
 {
-    this->password = password;
+    this->key = key;
 }
 
 // add client

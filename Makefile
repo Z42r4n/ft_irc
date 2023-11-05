@@ -6,7 +6,7 @@
 #    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/11/04 12:43:41 by ymoutaou         ###   ########.fr        #
+#    Updated: 2023/11/05 08:51:49 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,8 +71,8 @@ all			: logo $(NAME)
 logo		:
 				@echo "$(CYAN)"
 				@if [ -x /Users/ymoutaou/figlet/figlet ]; then \
-					/Users/ymoutaou/figlet/figlet -f /Users/ymoutaou/figlet/fonts/slant "IRC SERVER"; \
-					echo "By [ymoutaou] and [houadou]"; \
+					/Users/ymoutaou/figlet/figlet -f /Users/ymoutaou/figlet/fonts/Bloody "IRC SERVER" | lolcat -a -d 5; \
+					echo "By [ymoutaou] and [houadou]" | lolcat -a -d 5; \
 				else \
 					echo "[ IRC SERVER ]"; \
 					echo "By [ymoutaou] and [houadou]"; \
@@ -80,20 +80,35 @@ logo		:
 				@echo "$(RESET)"
 
 $(NAME)		:	$(OBJS)
-				@echo "$(YELLOW)Linking   . . . $(RESET)[$(CYAN)$(BOLD)$(NAME)$(RESET)]"
-				@echo "Create [$(CYAN)$(BOLD)$(NAME)$(RESET)] executable $(GREEN)successfully!$(RESET)"
+				@if which lolcat > /dev/null; then \
+					echo "Linking   . . . [$(OBJS)] -> [$@]" | lolcat -a -d 5; \
+				else \
+					echo "$(YELLOW)Linking   . . .$(RESET) [$(MAGENTA)$(OBJS)$(RESET)] -> [$(CYAN)$(BOLD)$(NAME)$(RESET)]"; \
+				fi
 				@$(CXX) $(CXXFLAGS) $(OBJS)  -o $(NAME)
 
 %.o			:	%.cpp $(INCS)
-				@echo "$(GREEN)Compiling . . .$(RESET) [$(MAGENTA)$<$(RESET)] -> [$(YELLOW)$@$(RESET)]"
+				@if which lolcat > /dev/null; then \
+					echo "Compiling . . . [$<] -> [$@]" | lolcat -a -d 5; \
+				else \
+					echo "$(GREEN)Compiling . . .$(RESET) [$(MAGENTA)$<$(RESET)] -> [$(YELLOW)$@$(RESET)]"; \
+				fi
 				@$(CXX) $(CXXFLAGS) -I $(HEADER) -c $< -o $@
 
 clean		:
-				@echo "$(RED)Cleaning . . . $(RESET)[$(YELLOW)$(OBJS)$(RESET)]"
+				@if which lolcat > /dev/null; then \
+					echo "Cleaning . . . [$(OBJS)]" | lolcat -a -d 5; \
+				else \
+					echo "$(RED)Cleaning . . .$(RESET) [$(YELLOW)$(OBJS)$(RESET)]"; \
+				fi
 				@$(RM) $(OBJS)
 
 fclean		:	logo clean
-				@echo "$(RED)Removing . . . $(RESET)[$(BLINK)$(NAME)$(RESET)]"
+				@if which lolcat > /dev/null; then \
+					echo "Removing . . . [$(NAME)]" | lolcat -a -d 5; \
+				else \
+					echo "$(RED)Removing . . .$(RESET) [$(BLINK)$(NAME)$(RESET)]"; \
+				fi
 				@$(RM) $(NAME)
 
 re			:	fclean all

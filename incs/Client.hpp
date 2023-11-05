@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 15:14:03 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 08:02:39 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #include <ircserv.hpp>
 
+// class Client
 class Client
 {
     public:
@@ -22,6 +23,7 @@ class Client
         Client(Client const & src);
         Client & operator=(Client const & src);
         
+        // getters
         std::string getNickname(void) const;
         std::string getUsername(void) const;
         std::string getRealname(void) const;
@@ -32,6 +34,7 @@ class Client
         t_fd getFd(void) const;
         // socklen_t getAddrLen(void) const;
         
+        // setters
         void setNickname(std::string name);
         void setUsername(std::string name);
         void setRealname(std::string name);

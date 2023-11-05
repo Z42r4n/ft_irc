@@ -6,33 +6,39 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 15:15:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 07:58:04 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include <ircserv.hpp>
 
+// default constructor
 Server::Server() {}
 
+// destructor
 Server::~Server() 
 {
 	// free start_time variable
 	free(start_time);
 }
 
+// copy constructor
 Server::Server(Server const & src)
 {
 	*this = src;
 }
 
+// assignment operator
 Server & Server::operator=(Server const & src)
 {
 	(void)src;
 	return *this;
 }
 
+// constructor with parameters
 Server::Server(t_port port, std::string password)
 {
+	// check if port is in range 6660-6669
 	if (port < 6660 || port > 6669)
 	{
 		throw std::invalid_argument("port must be in range 6660-6669\n");   
@@ -56,17 +62,22 @@ Server::Server(t_port port, std::string password)
 	// allocate start_time variable
 	start_time = (char *)std::malloc(sizeof(char) * 100);
 	
+	// set port and password 
 	this->port = port;
 	this->password = password;
+	
+	// initialize fds and nbChannels
 	this->nfds = 0;
 	this->nbChannels = 0;
 }
 
+// get port
 t_port Server::getPort(void) const
 {
 	return this->port;
 }
 
+// run the server
 void Server::run(void)
 {
 	// create socket

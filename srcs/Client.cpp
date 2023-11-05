@@ -6,11 +6,13 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/04 15:13:34 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/05 08:00:10 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
+
+// default constructor
 
 Client::Client()
 {
@@ -21,13 +23,16 @@ Client::Client()
     this->_username = "";
 }
 
+// destructor
 Client::~Client() {}
 
+// copy constructor
 Client::Client(Client const & src)
 {
     *this = src;
 }
 
+// assignment operator
 Client & Client::operator=(Client const & src)
 {
     if (this != &src)
