@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/05 17:31:11 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 13:52:32 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,30 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 		{
 			if (clients[i][fd].getNickname() != params[1])
 			{
-				// respect this format "":nickName!~userName@localhost NICK :newNickname\r\n"
-				sendData(fd, NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(),params[1]));
+				// check if the client is in any channel
+				if (clients[i][fd].getChannelsSize() > 0)
+				{
+					// send broadcast message to all clients in channels that the client joined
+					for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
+					{
+						channelBroadcast(i, fd, params, clients[i][fd].getChannel(j), _NICK);
+					}
+				}
+				else
+				{
+					// respect this format "":nickName!~userName@localhost NICK :newNickname\r\n"
+					sendData(fd, NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(),params[1]));
+				}
 			}
 			
 			// set the new nickname
 			clients[i][fd].setNickname(params[1]);
 			
-			// send broadcast message to all clients in channels that the client joined
-			for (size_t j = 0; j < clients[i][fd].getChannels().size(); j++)
-			{
-				channelBroadcast(i, fd, params, clients[i][fd].getChannels()[j], _NICK);
-			}
 			return ;
 		}
 		
 		// set the nickname
 		clients[i][fd].setNickname(params[1]);
-		
-		// check if the client is joined to a channel
 
 		// set the client as registered if the username and nickname are set
 		if (clients[i][fd].getUsername() != "" && clients[i][fd].getNickname() != "*")

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/05 17:30:14 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 11:47:43 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,16 +160,18 @@ void Server::channelBroadcast(int i, t_fd fd, t_params params, size_t channelInd
 {
 	if (type == _JOIN)
 	{
-		for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
+		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
-			sendData(channels[channelIndex].getClients()[j].getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
+			sendData(channels[channelIndex].getClient(j).getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
 		}
 	}
 	else if (type == _NICK)
 	{
-		for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
+		//print the size of the clients in the channel
+		std::cout << channels[channelIndex].getClientsSize() << std::endl;
+		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
-			sendData(channels[channelIndex].getClients()[j].getFd(), NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
+			sendData(channels[channelIndex].getClient(j).getFd(), NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(), params[1]));
 		}
 	}
 	// else if (type == _QUIT)

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 14:08:54 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 11:11:32 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,15 @@ void Channel::addOperator(Client &client)
 }
 
 // get clients
-std::vector<Client> Channel::getClients(void) const
+Client Channel::getClient(size_t index) const
 {
-    return this->clients;
+    return this->clients[index];
+}
+
+// get clients size
+size_t Channel::getClientsSize(void) const
+{
+    return this->clients.size();
 }
 
 // list clients

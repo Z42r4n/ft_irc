@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 17:24:21 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 10:51:58 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ class Client
         bool isGetPassword(void) const;
         bool isOperator(void) const;
         t_fd getFd(void) const;
-        std::vector<size_t> getChannels(void) const;
+        size_t getChannel(size_t index) const;
+        size_t getChannelsSize(void) const;
         
         // add channel index to the vector
         void addChannel(size_t channelIndex);
@@ -58,7 +59,7 @@ class Client
         bool _hasPassword;
         struct sockaddr_in _addr;
         
-        // store the channels names that the client joined
+        // store the channels index that the client joined
         std::vector<size_t> _channels;
 
 };

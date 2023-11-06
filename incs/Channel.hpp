@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 13:29:25 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 11:11:29 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ class Channel
         std::string getName(void) const;
         std::string getKey(void) const;
         std::string listClients(void) const;
-        std::vector<Client> getClients(void) const;
+        Client getClient(size_t index) const;
+        size_t getClientsSize(void) const;
         
    
         void setName(std::string name);

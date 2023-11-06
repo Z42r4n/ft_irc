@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 17:24:38 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 11:31:16 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,14 @@ void Client::addChannel(size_t channelIndex)
     this->_channels.push_back(channelIndex);
 }
 
-// get channels
-std::vector<size_t> Client::getChannels(void) const
+// get channel by index
+size_t Client::getChannel(size_t index) const
 {
-    return this->_channels;
+        return this->_channels[index];
+}
+
+// get channels size
+size_t Client::getChannelsSize(void) const
+{
+    return this->_channels.size();
 }

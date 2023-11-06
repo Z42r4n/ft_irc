@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/05 17:22:16 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 13:20:13 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,11 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 		// create new channel
 		Channel channel;
 		
-		// set channel name of cchannel
+		// set channel name of channel
 		channel.setName(params[1]);
 		
-		// add the name of the channel to the channels vector
-		clients[i][fd].addChannel(channelIndex);
+		// add the index of the channel to the channels vector
+		clients[i][fd].addChannel(nbChannels);
 		
 		// add the client to the channel
 		channel.addClient(clients[i][fd]);
