@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/06 10:51:58 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/07 15:24:04 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Client
         struct sockaddr_in getAddr(void) const;
         bool isRegistered(void) const;
         bool isGetPassword(void) const;
+        bool isReceivedNickMsg(void) const;
         bool isOperator(void) const;
         t_fd getFd(void) const;
         size_t getChannel(size_t index) const;
@@ -45,6 +46,7 @@ class Client
         void setAddr(struct sockaddr_in addr);
         void setIsRegistered(bool isRegistered);
         void setIsGetPassword(bool isGetPassword);
+        void setIsReceivedNickMsg(bool isReceivedNickMsg);
         void setIsOperator(bool isOperator);
         void setFd(t_fd fd);
         
@@ -57,6 +59,7 @@ class Client
         bool _isRegistered;
         // if the PASS command is executed successfully this well be true
         bool _hasPassword;
+        bool _isReceivedNickMsg;
         struct sockaddr_in _addr;
         
         // store the channels index that the client joined

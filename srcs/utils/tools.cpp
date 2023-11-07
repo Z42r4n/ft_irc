@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/07 09:08:26 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/07 15:53:07 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,17 +162,23 @@ void Server::channelBroadcast(int i, t_fd fd, std::string str, size_t channelInd
 	{
 		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
-			sendData(channels[channelIndex].getClient(j).getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), str));
+			sendData(channels[channelIndex].getClient(j)->getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), str));
 		}
 	}
 	else if (type == _NICK)
 	{
-		//print the size of the clients in the channel
-		std::cout << channels[channelIndex].getClientsSize() << std::endl;
 		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
-			sendData(channels[channelIndex].getClient(j).getFd(), NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(), str));
+			
+			if (!channels[channelIndex].getClient(j)->isReceivedNickMsg())
+			{
+				sendData(channels[channelIndex].getClient(j)->getFd(), NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(), str));
+				channels[channelIndex].getClient(j)->setIsReceivedNickMsg(true);
+				// print the nickname of the client that received the message and the isReceivedNickMsg value
+				std::cout << channels[channelIndex].getClient(j)->getNickname() << " " << channels[channelIndex].getClient(j)->isReceivedNickMsg() << std::endl;
+			}
 		}
+		
 	}
 	// else if (type == _QUIT)
 	// {

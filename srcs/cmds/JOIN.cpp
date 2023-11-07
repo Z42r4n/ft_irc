@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/07 11:12:07 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/07 15:49:57 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,24 +37,26 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 	{
 		chans = ft::ft_split(params[1], ",");
 		
-		// check if channels is duplicated
+		// check if the name of the channel is duplicated
 		for (size_t j = 0; j < chans.size(); j++)
 		{
-			for (size_t k = j + 1; k < chans.size(); k++)
+			for (size_t k = 0; k < chans.size(); k++)
 			{
-				if (chans[j] == chans[k])
+				if (j != k && chans[j] == chans[k])
 				{
-					// put in chans only one time
+					// send irc server error message
 					chans.erase(chans.begin() + k);
+					k = 0;
 				}
 			}
 		}
-
 	}
 	else
 	{
 		chans.push_back(params[1]);
 	}
+	for (size_t j = 0; j < chans.size(); j++)	
+		std::cout << "chnnel name: " << chans[j] << std::endl;
 
 	// check if the channels exist return -1 if not exist
 	std::vector<int> chansIndex;
@@ -62,7 +64,10 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 	if (chans.size() > 1)
 	{
 		for (size_t j = 0; j < chans.size(); j++)
+		{
+			
 			chansIndex.push_back(channelExist(chans[j]));
+		}
 	}
 	else
 	{
@@ -89,7 +94,7 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 			clients[i][fd].addChannel(nbChannels);
 			
 			// add the client to the channel
-			channel.addClient(clients[i][fd]);
+			channel.addClient(&(clients[i][fd]));
 			
 			// add channel to the channels vector
 			if (nbChannels < MAX_CHANNELS)
@@ -123,7 +128,7 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 		clients[i][fd].addChannel(chansIndex[j]);
 		
 		// add the client to the channel
-		channels[chansIndex[j]].addClient(clients[i][fd]);
+		channels[chansIndex[j]].addClient(&(clients[i][fd]));
 		
 		// send irc server message to clients in the channel
 		channelBroadcast(i, fd, chans[j], chansIndex[j], _JOIN);

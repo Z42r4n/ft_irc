@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/06 11:11:32 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/07 15:49:16 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void Channel::setKey(std::string key)
 }
 
 // add client
-void Channel::addClient(Client &client)
+void Channel::addClient(Client *client)
 {
     this->clients.push_back(client);
 }
@@ -91,7 +91,7 @@ void Channel::addOperator(Client &client)
 }
 
 // get clients
-Client Channel::getClient(size_t index) const
+Client* Channel::getClient(size_t index) const
 {
     return this->clients[index];
 }
@@ -103,24 +103,27 @@ size_t Channel::getClientsSize(void) const
 }
 
 // list clients
-std::string Channel::listClients(void) const
+std::string Channel::listClients() const
 {
     std::string list;
     for (size_t i = 0; i < this->clients.size(); i++)
     {
-        list += this->clients[i].getNickname();
-        if (i < this->clients.size() - 1)
-            list += " ";
+        if (Client* client = this->clients[i]) {
+            list += client->getNickname(); 
+            if (i < this->clients.size() - 1)
+                list += " ";
+        }
     }
     return list;
 }
+
 
 // check if client exist
 bool Channel::clientExist(Client &client)
 {
     for (size_t i = 0; i < this->clients.size(); i++)
     {
-        if (this->clients[i].getNickname() == client.getNickname())
+        if (this->clients[i]->getNickname() == client.getNickname())
             return true;
     }
     return false;
