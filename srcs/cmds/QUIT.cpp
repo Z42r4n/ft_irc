@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 14:11:47 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/03 16:39:59 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/07 09:12:19 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,29 @@ void Server::quitCommand(int i, t_fd fd, t_params params)
 	{
 		// send notice message to client
 		sendData(fd, NOTICE(clients[i][fd].getNickname()));
+		
+		// send quit message to all clients in the same channel
+		if (clients[i][fd].getChannelsSize() > 0)
+		{	
+			for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
+			{
+				// get the index of the channel
+				size_t channelIndex = clients[i][fd].getChannel(j);
+				
+				// broadcast message to all clients in channel
+				channelBroadcast(i, fd, "Test", channelIndex, _QUIT);
+			}
+			
+			// remove the client from all channels
+			// for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
+			// {
+			// 	// get the index of the channel
+			// 	size_t channelIndex = clients[i][fd].getChannel(j);
+				
+			// 	// remove the client from the channel
+			// 	channels[channelIndex].removeClient(clients[i][fd]);
+			// }
+		}
 	}
 	
 	// send irc server error message

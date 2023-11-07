@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/05 17:28:55 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:39:21 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@
 #define JOIN(p1, p2, p3) ":" + p1 + "!~" + p2 + "@localhost JOIN :" + p3 + "\r\n"
 
 #define NICK(p1, p2, p3) ":" + p1 + "!~" + p2 + "@localhost NICK :" + p3 + "\r\n"
+
+// respect this form :aaaa!~a@localhost QUIT :"Leaving"
+#define QUIT(p1, p2, p3) ":" + p1 + "!~" + p2 + "@localhost QUIT :" + p3 + "\r\n"
 
 // DEFINES
 

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/06 13:52:32 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/07 09:09:31 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 					// send broadcast message to all clients in channels that the client joined
 					for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
 					{
-						channelBroadcast(i, fd, params, clients[i][fd].getChannel(j), _NICK);
+						channelBroadcast(i, fd, params[1], clients[i][fd].getChannel(j), _NICK);
 					}
 				}
 				else
