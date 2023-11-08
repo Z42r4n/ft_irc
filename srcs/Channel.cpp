@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/07 15:49:16 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:57:23 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ Channel::Channel()
     this->name = "*";
     this->key = "";
     this->maxClients = 0;
+    this->modeString = "";
+    this->creationTime = time(NULL);
 }
 
 // destructor
@@ -42,6 +44,8 @@ Channel & Channel::operator=(Channel const & src)
         this->maxClients = src.maxClients;
         this->clients = src.clients;
         this->operators = src.operators;
+        this->modeString = src.modeString;
+        this->creationTime = src.creationTime;
     }
     return *this;
 }
@@ -52,6 +56,9 @@ Channel::Channel(std::string name, std::string key, size_t maxClients)
     this->name = name;
     this->key = key;
     this->maxClients = maxClients;
+
+    // get current time in the timestamp unit
+    this->creationTime = time(NULL);
 }
 
 // get name
@@ -126,5 +133,37 @@ bool Channel::clientExist(Client &client)
         if (this->clients[i]->getNickname() == client.getNickname())
             return true;
     }
+    return false;
+}
+
+// get creation time
+time_t Channel::getCreationTime(void) const
+{
+    return this->creationTime;
+}
+
+// get modes
+std::string Channel::getModes(void) const
+{
+    return this->modeString;
+}
+
+// set modes
+void Channel::setModes(std::string modes)
+{
+    this->modeString = modes;
+}
+
+// add mode
+void Channel::addMode(char mode)
+{
+    this->modeString += mode;
+}
+
+// mode alredy setted
+bool Channel::modeIsSet(char mode)
+{
+    if (this->modeString.find(mode) != std::string::npos)
+        return true;
     return false;
 }

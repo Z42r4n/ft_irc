@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/07 15:49:57 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/08 13:07:53 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,6 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 	{
 		chans.push_back(params[1]);
 	}
-	for (size_t j = 0; j < chans.size(); j++)	
-		std::cout << "chnnel name: " << chans[j] << std::endl;
 
 	// check if the channels exist return -1 if not exist
 	std::vector<int> chansIndex;

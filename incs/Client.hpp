@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/07 15:24:04 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:13:01 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class Client
         void setIsReceivedNickMsg(bool isReceivedNickMsg);
         void setIsOperator(bool isOperator);
         void setFd(t_fd fd);
+        
         
     private:
         t_fd _fd;

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/07 16:16:06 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:01:26 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 		{
 			if (clients[i][fd].getNickname() != params[1])
 			{
-				// check if the client is in any channel
+				// check if channel has clients
 				if (clients[i][fd].getChannelsSize() > 0)
 				{
 					// send broadcast message to all clients in channels that the client joined
@@ -78,7 +78,6 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 				}
 				else
 				{
-					// respect this format "":nickName!~userName@localhost NICK :newNickname\r\n"
 					sendData(fd, NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(),params[1]));
 				}
 			}

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/07 15:45:32 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:56:43 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,13 @@ class Channel
         std::string listClients(void) const;
         Client *getClient(size_t index) const;
         size_t getClientsSize(void) const;
+        time_t getCreationTime(void) const;
+        std::string getModes(void) const;
         
    
         void setName(std::string name);
         void setKey(std::string password);
+        void setModes(std::string modes);
 
         // add client
         void addClient(Client *client);
@@ -39,11 +42,17 @@ class Channel
         void addOperator(Client &client);
         // check if client exist
         bool clientExist(Client &client);
+        // add mode
+        void addMode(char mode);
+        // mode alredy setted
+        bool modeIsSet(char mode);
         
     private:
         std::string name;
         std::string key;
+        time_t creationTime;
         size_t maxClients;
+        std::string modeString;
         std::vector<Client *> clients;
         std::vector<Client> operators;
 };

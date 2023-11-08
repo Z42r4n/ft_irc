@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/07 15:53:07 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/08 16:04:27 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,15 @@ namespace ft
 		}
 		return str;
 	}
+
+	// check modes, supported modes: i, t, k, o, l;
+	bool validModes(char modes)
+	{
+		std::string modesList = "itkol";
+		if (modesList.find(modes) != std::string::npos)
+			return true;
+		return false;
+	} 
 }
 
 // welcome message, Server.hpp
@@ -174,8 +183,6 @@ void Server::channelBroadcast(int i, t_fd fd, std::string str, size_t channelInd
 			{
 				sendData(channels[channelIndex].getClient(j)->getFd(), NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(), str));
 				channels[channelIndex].getClient(j)->setIsReceivedNickMsg(true);
-				// print the nickname of the client that received the message and the isReceivedNickMsg value
-				std::cout << channels[channelIndex].getClient(j)->getNickname() << " " << channels[channelIndex].getClient(j)->isReceivedNickMsg() << std::endl;
 			}
 		}
 		
