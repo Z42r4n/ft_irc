@@ -6,21 +6,21 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 14:33:35 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/05 09:52:10 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 12:58:25 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
 
-void Server::passCommand(int i, t_fd fd, t_params params)
+void Server::passCommand(t_fd fd, t_params params)
 {
 	std::string pass = params[1];
 	
 	// check if the client is already registered
-	if (clients[i][fd].isGetPassword())
+	if (clients[fd].isGetPassword())
 	{
 		// send irc server error message
-		sendData(fd, ERR_ALREADYREGISTERED(clients[i][fd].getNickname()));
+		sendData(fd, ERR_ALREADYREGISTERED(clients[fd].getNickname()));
 		return ;
 	}
 	
@@ -28,7 +28,7 @@ void Server::passCommand(int i, t_fd fd, t_params params)
 	if (params.size() != 2 && params[1].find(":") == std::string::npos)
 	{
 		// send irc server error message
-		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
+		sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
 		return ;
 	}
 
@@ -40,11 +40,11 @@ void Server::passCommand(int i, t_fd fd, t_params params)
 	if (this->password == pass)
 	{
 		// set the isGetPassword to true
-		clients[i][fd].setIsGetPassword(true);
+		clients[fd].setIsGetPassword(true);
 	}
 	else
 	{
 		// send irc server error message
-		this->sendData(fd, ERR_PASSWDMISMATCH(clients[i][fd].getNickname()));
+		this->sendData(fd, ERR_PASSWDMISMATCH(clients[fd].getNickname()));
 	}
 }

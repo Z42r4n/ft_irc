@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 09:13:44 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/03 12:24:11 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 12:52:39 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 void Server::userCommand(int i, t_fd fd, t_params params)
 {
 	// ths user command can be used only after the password command
-	if (clients[i][fd].isGetPassword())
+	if (clients[fd].isGetPassword())
 	{
 		// check if the client is already registered
-		if (clients[i][fd].getUsername() != "")
+		if (clients[fd].getUsername() != "")
 		{
 			// send irc server error message
-			sendData(fd, ERR_ALREADYREGISTERED(clients[i][fd].getNickname()));
+			sendData(fd, ERR_ALREADYREGISTERED(clients[fd].getNickname()));
 			return ;
 		}
 		
@@ -29,7 +29,7 @@ void Server::userCommand(int i, t_fd fd, t_params params)
 		if (params.size() != 5 && params[4].find(":") == std::string::npos)
 		{
 			// send irc server error message
-			sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
+			sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
 			return ;
 		}
 
@@ -39,24 +39,36 @@ void Server::userCommand(int i, t_fd fd, t_params params)
 			// truncate the username to USERLEN
 			params[1] = params[1].substr(0, USERLEN);
 		}
+		
+		// if the username containe @ symbol, we need to get the username before the @ symbol
+		if (params[1].find("@") != std::string::npos)
+			params[1] = params[1].substr(0, params[1].find("@"));
 
 		// set the username
-		clients[i][fd].setUsername(params[1]);
+		clients[fd].setUsername(params[1]);
 
 		// set the realname
-		clients[i][fd].setRealname(params[4]);
+		clients[fd].setRealname(params[4]);
 
 		// if the realname contains spaces, we need to get the realname after the colon symbol
 		if (params[4].find(":") != std::string::npos)
-			clients[i][fd].setRealname(ft::ft_getStr(params));
+			clients[fd].setRealname(ft::ft_getStr(params));
 
 		// set the client as registered if the username and nickname are set
-		if (clients[i][fd].getUsername() != "" && clients[i][fd].getNickname() != "*")
+		if (clients[fd].getUsername() != "" && clients[fd].getNickname() != "*")
 		{
-			clients[i][fd].setIsRegistered(true);
+			clients[fd].setIsRegistered(true);
 
 			// send irc server welcome message
-			welcomeMessage(i, fd);
+			welcomeMessage(fd);
 		}
+	}
+	if (clients[fd].getNickname() == "*")
+	{
+		// send irc server error message bad password
+		sendData(fd, ERROR(std::string("Access denied: Bad password?")));
+
+		// clode connection
+		closeConnection(i, fd);
 	}
 }

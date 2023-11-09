@@ -6,19 +6,19 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/08 13:07:53 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 12:55:28 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ircserv.hpp>
 
-void Server::joinCommand(int i, t_fd fd, t_params params)
+void Server::joinCommand(t_fd fd, t_params params)
 {
 	// check if the client is not registered
-	if (!clients[i][fd].isRegistered())
+	if (!clients[fd].isRegistered())
 	{
 		// send irc server error message
-		sendData(fd, ERR_NOTREGISTERED(clients[i][fd].getNickname()));
+		sendData(fd, ERR_NOTREGISTERED(clients[fd].getNickname()));
 		return ;
 	}
 
@@ -26,7 +26,7 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 	if (params.size() < 2 || params.size() > 3)
 	{
 		// send irc server error message
-		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
+		sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
 		return ;
 	}
 	
@@ -78,7 +78,7 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 		if (chans[j][0] != '#')
 		{
 			// send irc server error message
-			sendData(fd, ERR_NOSUCHCHANNEL(clients[i][fd].getNickname(), chans[j]));
+			sendData(fd, ERR_NOSUCHCHANNEL(clients[fd].getNickname(), chans[j]));
 			continue ;
 		}
 
@@ -89,10 +89,10 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 			Channel channel(chans[j]);
 			
 			// add the index of the channel to the channels vector
-			clients[i][fd].addChannel(nbChannels);
+			clients[fd].addChannel(nbChannels);
 			
 			// add the client to the channel
-			channel.addClient(&(clients[i][fd]));
+			channel.addClient(&(clients[fd]));
 			
 			// add channel to the channels vector
 			if (nbChannels < MAX_CHANNELS)
@@ -103,36 +103,36 @@ void Server::joinCommand(int i, t_fd fd, t_params params)
 			else
 			{
 				// send irc server error message
-				sendData(fd, ERR_TOOMANYCHANNELS(clients[i][fd].getNickname(), chans[j]));
+				sendData(fd, ERR_TOOMANYCHANNELS(clients[fd].getNickname(), chans[j]));
 				return ;
 			}
 			
 			// send irc server message
-			sendData(fd, JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), chans[j]));
-			sendData(fd, RPL_NAMREPLY(clients[i][fd].getNickname(), chans[j], channel.listClients()));
-			sendData(fd, RPL_ENDOFNAMES(clients[i][fd].getNickname(), chans[i]));
+			sendData(fd, JOIN(clients[fd].getNickname(), clients[fd].getUsername(), chans[j]));
+			sendData(fd, RPL_NAMREPLY(clients[fd].getNickname(), chans[j], channel.listClients()));
+			sendData(fd, RPL_ENDOFNAMES(clients[fd].getNickname(), chans[j]));
 			continue ;
 		}
 		// here the channel or channels exist
 
 		// check if the client is already joined to the channel
-		if (channels[chansIndex[j]].clientExist(clients[i][fd]))
+		if (channels[chansIndex[j]].clientExist(clients[fd]))
 		{
 			// this block for later
 			return ;
 		}
 		
 		// add the name of the channel to the channels vector
-		clients[i][fd].addChannel(chansIndex[j]);
+		clients[fd].addChannel(chansIndex[j]);
 		
 		// add the client to the channel
-		channels[chansIndex[j]].addClient(&(clients[i][fd]));
+		channels[chansIndex[j]].addClient(&(clients[fd]));
 		
 		// send irc server message to clients in the channel
-		channelBroadcast(i, fd, chans[j], chansIndex[j], _JOIN);
+		channelBroadcast(fd, chans[j], chansIndex[j], _JOIN);
 		
-		sendData(fd, RPL_NAMREPLY(clients[i][fd].getNickname(), chans[j], channels[chansIndex[j]].listClients()));
-		sendData(fd, RPL_ENDOFNAMES(clients[i][fd].getNickname(), chans[j]));
+		sendData(fd, RPL_NAMREPLY(clients[fd].getNickname(), chans[j], channels[chansIndex[j]].listClients()));
+		sendData(fd, RPL_ENDOFNAMES(clients[fd].getNickname(), chans[j]));
 	}
 }
 	

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 14:11:47 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/07 09:12:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 12:53:00 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void Server::quitCommand(int i, t_fd fd, t_params params)
 	if (params.size() > 2 && params[1].find(":") == std::string::npos)
 	{
 		// send irc server error message
-		sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
+		sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
 		return ;
 	}
 	
@@ -38,31 +38,31 @@ void Server::quitCommand(int i, t_fd fd, t_params params)
 	}
 
 	// if client is registered send notice message
-	if (clients[i][fd].isRegistered())
+	if (clients[fd].isRegistered())
 	{
 		// send notice message to client
-		sendData(fd, NOTICE(clients[i][fd].getNickname()));
+		sendData(fd, NOTICE(clients[fd].getNickname()));
 		
 		// send quit message to all clients in the same channel
-		if (clients[i][fd].getChannelsSize() > 0)
+		if (clients[fd].getChannelsSize() > 0)
 		{	
-			for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
+			for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
 			{
 				// get the index of the channel
-				size_t channelIndex = clients[i][fd].getChannel(j);
+				size_t channelIndex = clients[fd].getChannel(j);
 				
 				// broadcast message to all clients in channel
-				channelBroadcast(i, fd, "Test", channelIndex, _QUIT);
+				channelBroadcast(fd, "Test", channelIndex, _QUIT);
 			}
 			
 			// remove the client from all channels
-			// for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
+			// for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
 			// {
 			// 	// get the index of the channel
-			// 	size_t channelIndex = clients[i][fd].getChannel(j);
+			// 	size_t channelIndex = clients[fd].getChannel(j);
 				
 			// 	// remove the client from the channel
-			// 	channels[channelIndex].removeClient(clients[i][fd]);
+			// 	channels[channelIndex].removeClient(clients[fd]);
 			// }
 		}
 	}
@@ -71,8 +71,5 @@ void Server::quitCommand(int i, t_fd fd, t_params params)
 	sendData(fd, ERROR(std::string(quit_message)));
 	
 	// close the connection
-	fds[i + 1].fd = 0;
-	clients[i][fd] = Client();
-	std::cout << RED << "[-] Client disconnected, socket fd is: " << RESET << YELLOW << fd << RESET << "\n" << std::endl;
-	close(fd);
+	closeConnection(i, fd);
 }

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/08 16:04:27 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 12:54:13 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,24 +110,35 @@ namespace ft
 		return str;
 	}
 
-	// check modes, supported modes: i, t, k, o, l;
+	// check modes, supported modes: i, t, k, o, l, + and -;
 	bool validModes(char modes)
 	{
-		std::string modesList = "itkol";
+		std::string modesList = "-+itkol";
 		if (modesList.find(modes) != std::string::npos)
 			return true;
 		return false;
 	} 
+
+	// replace all spaces with one space
+	std::string ft_replace(std::string str, std::string oldStr, std::string newStr)
+	{
+		size_t pos = 0;
+		while ((pos = str.find(oldStr)) != std::string::npos)
+		{
+			str.replace(pos, oldStr.length(), newStr);
+		}
+		return str;
+	}
 }
 
 // welcome message, Server.hpp
-void Server::welcomeMessage(int i, t_fd fd)
+void Server::welcomeMessage(t_fd fd)
 {
-	sendData(fd, RPL_WELCOME(clients[i][fd].getNickname(), clients[i][fd].getUsername()));
-	sendData(fd, RPL_YOURHOST(clients[i][fd].getNickname()));
-	sendData(fd, RPL_CREATED(clients[i][fd].getNickname(), start_time));
-	sendData(fd, RPL_MYINFO(clients[i][fd].getNickname()));
-	sendData(fd, RPL_ISUPPORT(clients[i][fd].getNickname()));
+	sendData(fd, RPL_WELCOME(clients[fd].getNickname(), clients[fd].getUsername()));
+	sendData(fd, RPL_YOURHOST(clients[fd].getNickname()));
+	sendData(fd, RPL_CREATED(clients[fd].getNickname(), start_time));
+	sendData(fd, RPL_MYINFO(clients[fd].getNickname()));
+	sendData(fd, RPL_ISUPPORT(clients[fd].getNickname()));
 
 	// read the motd file ircserv.motd
 	std::ifstream motdFile("./srcs/motd/ircserv.motd");
@@ -136,19 +147,19 @@ void Server::welcomeMessage(int i, t_fd fd)
 	// send the motd file line by line
 	if (motdFile.is_open() && motdFile.good())
 	{
-		sendData(fd, RPL_MOTDSTART(clients[i][fd].getNickname()));
+		sendData(fd, RPL_MOTDSTART(clients[fd].getNickname()));
 		while (getline(motdFile, line))
 		{
 			// send the motd file line by line
-			sendData(fd,RPL_MOTD(clients[i][fd].getNickname(), line));
+			sendData(fd,RPL_MOTD(clients[fd].getNickname(), line));
 		}
 		motdFile.close();
-		sendData(fd, RPL_MOTDEND(clients[i][fd].getNickname()));
+		sendData(fd, RPL_MOTDEND(clients[fd].getNickname()));
 	}
 	else
 	{
 		// send MOTD file is missing
-		sendData(fd, ERR_NOMOTD(clients[i][fd].getNickname()));
+		sendData(fd, ERR_NOMOTD(clients[fd].getNickname()));
 	}
 }
 
@@ -165,13 +176,13 @@ int Server::channelExist(std::string channelName)
 }
 
 // broadcast message to all clients in channel
-void Server::channelBroadcast(int i, t_fd fd, std::string str, size_t channelIndex, int type)
+void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type)
 {
 	if (type == _JOIN)
 	{
 		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
-			sendData(channels[channelIndex].getClient(j)->getFd(), JOIN(clients[i][fd].getNickname(), clients[i][fd].getUsername(), str));
+			sendData(channels[channelIndex].getClient(j)->getFd(), JOIN(clients[fd].getNickname(), clients[fd].getUsername(), str));
 		}
 	}
 	else if (type == _NICK)
@@ -181,7 +192,7 @@ void Server::channelBroadcast(int i, t_fd fd, std::string str, size_t channelInd
 			
 			if (!channels[channelIndex].getClient(j)->isReceivedNickMsg())
 			{
-				sendData(channels[channelIndex].getClient(j)->getFd(), NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(), str));
+				sendData(channels[channelIndex].getClient(j)->getFd(), NICK(clients[fd].getNickname(), clients[fd].getUsername(), str));
 				channels[channelIndex].getClient(j)->setIsReceivedNickMsg(true);
 			}
 		}
@@ -191,14 +202,14 @@ void Server::channelBroadcast(int i, t_fd fd, std::string str, size_t channelInd
 	// {
 	// 	for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 	// 	{
-	// 		sendData(channels[channelIndex].getClient(j).getFd(), QUIT(clients[i][fd].getNickname(), clients[i][fd].getUsername(), ft::ft_getStr(params)));
+	// 		sendData(channels[channelIndex].getClient(j).getFd(), QUIT(clients[fd].getNickname(), clients[fd].getUsername(), ft::ft_getStr(params)));
 	// 	}
 	// }
 	// else if (type == _PART)
 	// {
 	// 	for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
 	// 	{
-	// 		sendData(channels[channelIndex].getClients()[j].getFd(), PART(clients[i][fd].getNickname(), params[1]));
+	// 		sendData(channels[channelIndex].getClients()[j].getFd(), PART(clients[fd].getNickname(), params[1]));
 	// 	}
 	// }
 }

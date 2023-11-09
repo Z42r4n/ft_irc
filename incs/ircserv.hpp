@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/08 14:49:54 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 10:39:52 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ namespace ft
 {
 	// /srcs/utils/tools.cpp
 	std::vector<std::string> ft_split(std::string str, std::string delim);
+	std::string ft_replace(std::string str, std::string oldStr, std::string newStr);
 	std::string ft_getStr(t_params params);
 	void ft_usage(void);
 	void ft_getDate(char **buf);

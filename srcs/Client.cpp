@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/07 15:24:35 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 13:40:08 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ Client & Client::operator=(Client const & src)
     {
         this->_fd = src._fd;
         this->_isRegistered = src._isRegistered;
+        this->_hasPassword = src._hasPassword;
         this->_isReceivedNickMsg = src._isReceivedNickMsg;
         this->_nickname = src._nickname;
         this->_realname = src._realname;

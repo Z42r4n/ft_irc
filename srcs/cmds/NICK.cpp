@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/08 14:01:26 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 13:04:40 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 void Server::nickCommand(int i, t_fd fd, t_params params)
 {
 	// ths nick command can be used only after the password command
-	if (clients[i][fd].isGetPassword())
+	if (clients[fd].isGetPassword())
 	{
 		// check if nickname is empty
 		if (params.size() != 2)
 		{
 			// send irc server error message
-			sendData(fd, ERR_NEEDMOREPARAMS(clients[i][fd].getNickname(), params[0]));
+			sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
 			return ;
 		}
 		
@@ -29,7 +29,7 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 		if (params[1].length() > 9)
 		{
 			// send irc server error message
-			sendData(fd, ERR_NICKNAMETOOLONG(clients[i][fd].getNickname(), params[1]));
+			sendData(fd, ERR_NICKNAMETOOLONG(clients[fd].getNickname(), params[1]));
 			return ;
 		}
 		
@@ -37,68 +37,76 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 		if (!ft::isNicknameValid(params[1]))
 		{
 			// send irc server error message
-			sendData(fd, ERR_ERRONEUSNICKNAME(clients[i][fd].getNickname(), params[1]));
+			sendData(fd, ERR_ERRONEUSNICKNAME(clients[fd].getNickname(), params[1]));
 			return ;
 		}	
 
 		// check if the nickname is already taken from another client
 		for (t_fd k = 0; k < nfds; k++)
 		{
-			for (size_t j = 0; j < clients[k].size(); j++)
+			for (t_fd j = 0; j < nfds; j++)
 			{
-				if (k != i && clients[k][j].getNickname() == params[1])
+				if (k != j && clients[j].getNickname() == params[1])
 				{
 					// send irc server error message
-					sendData(fd, ERR_NICKNAMEINUSE(clients[k][fd].getNickname(), params[1]));
+					sendData(fd, ERR_NICKNAMEINUSE(clients[fd].getNickname(), params[1]));
 					return ;
 				}
 			}
 		}
 		
 		// if the client is already registered
-		if (clients[i][fd].isRegistered())
+		if (clients[fd].isRegistered())
 		{
-			if (clients[i][fd].getNickname() != params[1])
+			if (clients[fd].getNickname() != params[1])
 			{
 				// check if channel has clients
-				if (clients[i][fd].getChannelsSize() > 0)
+				if (clients[fd].getChannelsSize() > 0)
 				{
 					// send broadcast message to all clients in channels that the client joined
-					for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
+					for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
 					{
-						channelBroadcast(i, fd, params[1], clients[i][fd].getChannel(j), _NICK);
+						channelBroadcast(fd, params[1], clients[fd].getChannel(j), _NICK);
 					}
-					for (size_t j = 0; j < clients[i][fd].getChannelsSize(); j++)
+					for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
 					{
-						for (size_t k = 0; k < channels[clients[i][fd].getChannel(j)].getClientsSize(); k++)
+						for (size_t k = 0; k < channels[clients[fd].getChannel(j)].getClientsSize(); k++)
 						{
-							channels[clients[i][fd].getChannel(j)].getClient(k)->setIsReceivedNickMsg(false);
+							channels[clients[fd].getChannel(j)].getClient(k)->setIsReceivedNickMsg(false);
 						}
 					}
 				}
 				else
 				{
-					sendData(fd, NICK(clients[i][fd].getNickname(), clients[i][fd].getUsername(),params[1]));
+					sendData(fd, NICK(clients[fd].getNickname(), clients[fd].getUsername(),params[1]));
 				}
 			}
 			
 			// set the new nickname
-			clients[i][fd].setNickname(params[1]);
+			clients[fd].setNickname(params[1]);
 			
 			return ;
 		}
 		
 		// set the nickname
-		clients[i][fd].setNickname(params[1]);
+		clients[fd].setNickname(params[1]);
 
 		// set the client as registered if the username and nickname are set
-		if (clients[i][fd].getUsername() != "" && clients[i][fd].getNickname() != "*")
+		if (clients[fd].getUsername() != "" && clients[fd].getNickname() != "*")
 		{
-			clients[i][fd].setIsRegistered(true);
+			clients[fd].setIsRegistered(true);
 			
 			// send welcome message
-			welcomeMessage(i, fd);
+			welcomeMessage(fd);
 		}
+	}
+	else
+	{
+		// send irc server error message bad password
+		sendData(fd, ERROR(std::string("Access denied: Bad password?")));
+		
+		// clode connection
+		closeConnection(i, fd);
 	}
 }
 	
