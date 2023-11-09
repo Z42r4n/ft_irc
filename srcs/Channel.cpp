@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/08 14:57:23 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 17:22:25 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,12 @@ void Channel::setModes(std::string modes)
 void Channel::addMode(char mode)
 {
     this->modeString += mode;
+}
+
+// remove mode
+void Channel::removeMode(char mode)
+{
+    this->modeString.erase(this->modeString.find(mode), 1);
 }
 
 // mode alredy setted

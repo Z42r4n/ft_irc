@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 13:20:58 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/09 12:55:47 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 18:04:05 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,55 +49,71 @@ void Server::modeCommand(t_fd fd, t_params params)
 	// set the default mode
 	if (!channels[channelExist(params[1])].modeIsSet('t'))
 	{
-		std::cout << "set mode t" << std::endl;
 		channels[channelExist(params[1])].addMode('t');
 		sendData(fd, MODE(clients[fd].getNickname(), clients[fd].getUsername(), params[1], "+t"));
 	}
 
-	// this block of code in case of the mode is setted
+	// this block of code in case of the mode is passed with the command
 	if (params.size() > 2)
 	{
-		std::string modeWasSet = "+";
-		// check if the mode is valid
+		std::string mode = params[2];
+		
+		// handle the mode string
 		for (size_t j = 0; j < params[2].length(); j++)
 		{
-			//check if th mode string start with '+' or '-'
-			// if (j == 0 && params[2][j] != '+' && params[2][j] != '-')
-			// {
-			// 	// send irc server error message
-			// 	sendData(fd, ERR_UNKNOWNMODE(clients[fd].getNickname(), params[2]));
-			// 	return ;
-			// }
-			
-			// extract the mode if +++++il-------k well be "+i", "+l", "-k"
-			// if (params[2][j] == '+' || params[2][j] == '-')
-			// {
-			// 	modeWasSet += params[2][j];
-			// 	continue ;
-			// }
-			
-			
-			
-			if (!ft::validModes(params[2][j]))
+			if (params[2][j] == '+' || params[2][j] == '-')
+			{
+				mode = ft::ft_replace(mode, "++", "+");
+				mode = ft::ft_replace(mode, "--", "-");
+				mode = ft::ft_replace(mode, "+-", "-");
+				mode = ft::ft_replace(mode, "-+", "+");
+				continue;
+			}
+
+			// remove the + or - from the end of the mode
+			size_t end = mode.find_last_not_of("+-");
+    		if (end != std::string::npos)
+        		mode = mode.substr(0, end + 1);
+		}
+
+		// print the mode value
+
+		std::cout << "mode: " << mode << std::endl;
+
+		// set the mode
+		for (size_t i = 0; i < mode.length(); i++) // first one is +
+		{
+			if (!ft::validModes(mode[i]))
 			{
 				// send irc server error message
 				sendData(fd, ERR_UNKNOWNMODE(clients[fd].getNickname(), params[1]));
 
 			}
-			// check if the mode already setted
-			else if (channels[channelExist(params[1])].modeIsSet(params[2][j]))
+			else if (channels[channelExist(params[1])].modeIsSet(mode[i]))
 			{
 				// skip the mode that already setted
 				continue ;
 			}
 			else
 			{
-				// setting the mode
-				modeWasSet += params[2][j];
-				channels[channelExist(params[1])].addMode(params[2][j]);
+				if ((mode[i] == '+') && (!channels[channelExist(params[1])].modeIsSet(mode[i + 1])))
+				{
+					channels[channelExist(params[1])].addMode(mode[i + 1]);
+					i++;
+				}
+				else if ((mode[i] == '-') && (channels[channelExist(params[1])].modeIsSet(mode[i + 1])))
+				{
+					channels[channelExist(params[1])].removeMode(mode[i + 1]);
+					i++;
+				}
+				else if (mode[i] != '+' && mode[i] != '-')
+				{
+					channels[channelExist(params[1])].addMode(mode[i]);
+				}
 			}
 		}
-		if (modeWasSet.length() != 1)
-			sendData(fd, MODE(clients[fd].getNickname(), clients[fd].getUsername(), params[1], modeWasSet));
+		sendData(fd, MODE(clients[fd].getNickname(), clients[fd].getUsername(), params[1], mode));
+		// print the modeString
+		std::cout << "modeString: " << channels[channelExist(params[1])].getModes() << std::endl;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/08 14:56:43 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 17:22:09 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ class Channel
         bool clientExist(Client &client);
         // add mode
         void addMode(char mode);
+        // remove mode
+        void removeMode(char mode);
         // mode alredy setted
         bool modeIsSet(char mode);
         
