@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/09 13:40:51 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 18:15:42 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class Server
         void bimoCommand(t_fd fd, t_params params);
         void joinCommand(t_fd fd, t_params params);
         void modeCommand(t_fd fd, t_params params);
+        void privmsgCommand(t_fd fd, t_params params);
 
     private:
         t_fd serverfd;

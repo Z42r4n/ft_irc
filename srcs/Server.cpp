@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/09 14:01:22 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/09 18:20:07 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -267,7 +267,7 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	// check commands and call functions
 	// the PASS, NICK and USER commands uses to perform registration procedures for a new user
 	// the PASS command must be the first command that a client sends to a server after it has connected to the server
-	if (command == "PASS" || command == "pass")
+	if (command == "PASS" || command == "pass") /// if (std::upper(command) == "PASS")
 		passCommand(fd, params);
 	else if (command == "NICK" || command == "nick")
 		nickCommand(i, fd, params);
@@ -281,6 +281,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		joinCommand(fd, params);
 	else if (command == "MODE" || command == "mode")
 		modeCommand(fd, params);
+	else if (command == "PRIVMSG" || command == "privmsg")
+		privmsgCommand(fd, params);
 	else if (command == "PONG" || command == "pong")
 		return ;
 	else if (clients[fd].isRegistered())
