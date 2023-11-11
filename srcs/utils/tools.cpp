@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/09 17:17:16 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 16:07:19 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,16 @@ namespace ft
 		}
 		return str;
 	}
+
+	// conver string to upper case
+	std::string ft_toupper(std::string str)
+	{
+		for (size_t i = 0; i < str.length(); i++)
+		{
+			str[i] = std::toupper(str[i]);
+		}
+		return str;
+	}
 }
 
 // welcome message, Server.hpp
@@ -176,13 +186,13 @@ int Server::channelExist(std::string channelName)
 }
 
 // broadcast message to all clients in channel
-void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type)
+void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type, std::string msg)
 {
 	if (type == _JOIN)
 	{
 		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
-			sendData(channels[channelIndex].getClient(j)->getFd(), JOIN(clients[fd].getNickname(), clients[fd].getUsername(), str));
+			sendData(channels[channelIndex].getClient(j)->getFd(), JOIN(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str));
 		}
 	}
 	else if (type == _NICK)
@@ -190,13 +200,34 @@ void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int
 		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
 			
-			if (!channels[channelIndex].getClient(j)->isReceivedNickMsg())
+			if (!channels[channelIndex].getClient(j)->isReceivedMsg())
 			{
-				sendData(channels[channelIndex].getClient(j)->getFd(), NICK(clients[fd].getNickname(), clients[fd].getUsername(), str));
-				channels[channelIndex].getClient(j)->setIsReceivedNickMsg(true);
+				sendData(channels[channelIndex].getClient(j)->getFd(), NICK(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str));
+				channels[channelIndex].getClient(j)->setIsReceivedMsg(true);
 			}
 		}
 		
+	}
+	else if (type == _MSG)
+	{
+		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
+		{
+			if (channels[channelIndex].getClient(j)->getFd() != fd)
+			{
+				if (!channels[channelIndex].getClient(j)->isReceivedMsg())
+				{
+					sendData(channels[channelIndex].getClient(j)->getFd(), PRIVMSG(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str, msg));
+					channels[channelIndex].getClient(j)->setIsReceivedMsg(true);
+				}
+			}
+		}
+	}
+	else if (type == _PART)
+	{
+		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
+		{
+			sendData(channels[channelIndex].getClient(j)->getFd(), PART(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str, msg));
+		}
 	}
 	// else if (type == _QUIT)
 	// {

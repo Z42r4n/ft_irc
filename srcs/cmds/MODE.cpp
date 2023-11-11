@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 13:20:58 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/09 18:04:05 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:10:48 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 	if (params.size() == 2)
 	{
 		// send irc server error message
-		sendData(fd, RPL_CHANNELMODEIS(clients[fd].getNickname(), params[1]));
+		sendData(fd, RPL_CHANNELMODEIS(clients[fd].getNickname(), params[1], "+"));
 		sendData(fd, RPL_CREATIONTIME(clients[fd].getNickname(), params[1], std::to_string(channels[channelExist(params[1])].getCreationTime())));
 	}
 	
@@ -50,7 +50,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 	if (!channels[channelExist(params[1])].modeIsSet('t'))
 	{
 		channels[channelExist(params[1])].addMode('t');
-		sendData(fd, MODE(clients[fd].getNickname(), clients[fd].getUsername(), params[1], "+t"));
+		sendData(fd, MODE(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), params[1], "+t"));
 	}
 
 	// this block of code in case of the mode is passed with the command
@@ -112,7 +112,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 				}
 			}
 		}
-		sendData(fd, MODE(clients[fd].getNickname(), clients[fd].getUsername(), params[1], mode));
+		sendData(fd, MODE(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), params[1], mode));
 		// print the modeString
 		std::cout << "modeString: " << channels[channelExist(params[1])].getModes() << std::endl;
 	}

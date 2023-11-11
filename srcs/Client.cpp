@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/09 13:40:08 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:20:06 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@ Client::Client()
     this->_fd = -1;
     this->_isRegistered = false;
     this->_hasPassword = false;
-    this->_isReceivedNickMsg = false;
+    this->_isReceivedMsg = false;
     this->_nickname = "*";
     this->_realname = "";
     this->_username = "";
     this->_channels = std::vector<size_t>();
+    bzero(&this->_addr, sizeof(this->_addr));
 }
 
 // destructor
@@ -43,11 +44,12 @@ Client & Client::operator=(Client const & src)
         this->_fd = src._fd;
         this->_isRegistered = src._isRegistered;
         this->_hasPassword = src._hasPassword;
-        this->_isReceivedNickMsg = src._isReceivedNickMsg;
+        this->_isReceivedMsg = src._isReceivedMsg;
         this->_nickname = src._nickname;
         this->_realname = src._realname;
         this->_username = src._username;
         this->_channels = src._channels;
+        this->_addr = src._addr;
     }
     return *this;
 }
@@ -149,13 +151,30 @@ size_t Client::getChannelsSize(void) const
 }
 
 // isReceivedNickMsg
-bool  Client::isReceivedNickMsg(void) const
+bool  Client::isReceivedMsg(void) const
 {
-    return this->_isReceivedNickMsg;
+    return this->_isReceivedMsg;
 }
 
 // set isReceivedNickMsg
-void Client::setIsReceivedNickMsg(bool isReceivedNickMsg)
+void Client::setIsReceivedMsg(bool isReceivedMsg)
 {
-    this->_isReceivedNickMsg = isReceivedNickMsg;
+    this->_isReceivedMsg = isReceivedMsg;
+}
+
+// client is in channel
+bool Client::isInChannel(size_t channelIndex)
+{
+    for (size_t i = 0; i < this->_channels.size(); i++)
+    {
+        if (this->_channels[i] == channelIndex)
+            return true;
+    }
+    return false;
+}
+
+// get clinet ip address
+std::string Client::getIp(void) const
+{
+    return std::string(inet_ntoa(this->_addr.sin_addr));
 }

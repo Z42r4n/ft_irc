@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/30 09:13:44 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/09 12:52:39 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:24:11 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void Server::userCommand(int i, t_fd fd, t_params params)
 			welcomeMessage(fd);
 		}
 	}
-	if (clients[fd].getNickname() == "*")
+	else
 	{
 		// send irc server error message bad password
 		sendData(fd, ERROR(std::string("Access denied: Bad password?")));

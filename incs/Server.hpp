@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/09 18:15:42 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:33:50 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ class Server
         int channelExist(std::string channelName);
 
         // broadcast message to all clients in channel
-        void channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type);
+        void channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type, std::string msg = "");
+
+        // get client fd by nickname
+        t_fd getClientFd(std::string nickname);
 
         // commands functions
         void passCommand(t_fd fd, t_params params);
@@ -64,6 +67,7 @@ class Server
         void joinCommand(t_fd fd, t_params params);
         void modeCommand(t_fd fd, t_params params);
         void privmsgCommand(t_fd fd, t_params params);
+        void partCommand(t_fd fd, t_params params);
 
     private:
         t_fd serverfd;

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/09 17:22:25 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:54:05 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,19 @@ void Channel::setKey(std::string key)
 void Channel::addClient(Client *client)
 {
     this->clients.push_back(client);
+}
+
+// remove client
+void Channel::removeClient(Client *client)
+{
+    for (size_t i = 0; i < this->clients.size(); i++)
+    {
+        if (this->clients[i] == client)
+        {
+            this->clients.erase(this->clients.begin() + i);
+            break ;
+        }
+    }
 }
 
 // add operator

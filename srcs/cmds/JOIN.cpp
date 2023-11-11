@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/09 12:55:28 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:18:28 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void Server::joinCommand(t_fd fd, t_params params)
 			}
 			
 			// send irc server message
-			sendData(fd, JOIN(clients[fd].getNickname(), clients[fd].getUsername(), chans[j]));
+			sendData(fd, JOIN(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), chans[j]));
 			sendData(fd, RPL_NAMREPLY(clients[fd].getNickname(), chans[j], channel.listClients()));
 			sendData(fd, RPL_ENDOFNAMES(clients[fd].getNickname(), chans[j]));
 			continue ;

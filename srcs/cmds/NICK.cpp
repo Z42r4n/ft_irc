@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/09 13:04:40 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 14:41:42 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 		// check if the nickname is already taken from another client
 		for (t_fd k = 0; k < nfds; k++)
 		{
-			for (t_fd j = 0; j < nfds; j++)
+			for (t_fd j = 0; j < (t_fd)clients.size(); j++)
 			{
 				if (k != j && clients[j].getNickname() == params[1])
 				{
@@ -72,13 +72,13 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 					{
 						for (size_t k = 0; k < channels[clients[fd].getChannel(j)].getClientsSize(); k++)
 						{
-							channels[clients[fd].getChannel(j)].getClient(k)->setIsReceivedNickMsg(false);
+							channels[clients[fd].getChannel(j)].getClient(k)->setIsReceivedMsg(false);
 						}
 					}
 				}
 				else
 				{
-					sendData(fd, NICK(clients[fd].getNickname(), clients[fd].getUsername(),params[1]));
+					sendData(fd, NICK(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp() ,params[1]));
 				}
 			}
 			

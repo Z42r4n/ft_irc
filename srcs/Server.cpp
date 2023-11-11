@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/09 18:20:07 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 15:35:38 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,20 @@ Server::Server() {}
 Server::~Server() 
 {
 	// free start_time variable
-	free(start_time);
+	delete [] start_time;
+
+	// close all sockets
+	for (t_clients_it clientPair = clients.begin(); clientPair != clients.end(); clientPair++)
+	{
+		close(clientPair->first);
+	}
+	close(serverfd);
+	
+	// clear clients map
+	clients.clear();
+	
+	// shutdown server
+	shutdown(serverfd, SHUT_RDWR);
 }
 
 // copy constructor
@@ -71,7 +84,7 @@ Server::Server(t_port port, std::string password)
 	}
 	
 	// allocate start_time variable
-	start_time = (char *)std::malloc(sizeof(char) * 100);
+	start_time = new char[100];
 	
 	// set port and password 
 	this->port = port;
@@ -208,12 +221,6 @@ void Server::receiveData(void)
 				// Client disconnected
 				else if (rcv == 0)
 				{
-				// 	fds[i + 1].fd = 0;
-				// 	close(clientFD);
-				// 	// clients[clientFD] = Client();
-				// 	clients[clientFD].setIsGetPassword(false);
-				// 	std::cout << RED << "[-] Client disconnected, socket fd is: " << RESET << YELLOW << clientFD << RESET << "\n" << std::endl;
-
 					closeConnection(i , clientFD);
 				}
 				// Handle recv() error
@@ -267,24 +274,28 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	// check commands and call functions
 	// the PASS, NICK and USER commands uses to perform registration procedures for a new user
 	// the PASS command must be the first command that a client sends to a server after it has connected to the server
-	if (command == "PASS" || command == "pass") /// if (std::upper(command) == "PASS")
+	if (ft::ft_toupper(command) == "PASS") /// if (std::upper(command) == "PASS")
 		passCommand(fd, params);
-	else if (command == "NICK" || command == "nick")
+	else if (ft::ft_toupper(command) == "NICK")
 		nickCommand(i, fd, params);
-	else if (command == "USER" || command == "user")
+	else if (ft::ft_toupper(command) == "USER")
 		userCommand(i, fd, params);
-	else if (command == "QUIT" || command == "quit")
+	else if (ft::ft_toupper(command) == "QUIT")
 		quitCommand(i, fd, params);
-	else if (command == "BIMO" || command == "bimo")
+	else if (ft::ft_toupper(command) == "BIMO")
 		bimoCommand(fd, params);
-	else if (command == "JOIN" || command == "join")
+	else if (ft::ft_toupper(command) == "JOIN")
 		joinCommand(fd, params);
-	else if (command == "MODE" || command == "mode")
+	else if (ft::ft_toupper(command) == "MODE")
 		modeCommand(fd, params);
-	else if (command == "PRIVMSG" || command == "privmsg")
+	else if (ft::ft_toupper(command) == "PRIVMSG")
 		privmsgCommand(fd, params);
-	else if (command == "PONG" || command == "pong")
-		return ;
+	else if (ft::ft_toupper(command) == "PART")
+		partCommand(fd, params);
+	else if (ft::ft_toupper(command) == "PING")
+		sendData(fd, "PONG\r\n");
+	else if (ft::ft_toupper(command) == "PONG")
+		sendData(fd, "PING\r\n");
 	else if (clients[fd].isRegistered())
 	{
 		// send irc server error message if the command is unknown
@@ -311,4 +322,15 @@ void Server::closeConnection(int i, t_fd fd)
 	close(fd);
 	clients[fd] = Client();
 	std::cout << RED << "[-] Client disconnected, socket fd is: " << RESET << YELLOW << fd << RESET << "\n" << std::endl;
+}
+
+// get client fd by nickname
+t_fd Server::getClientFd(std::string nickname)
+{
+	for (t_clients_it clientPair = clients.begin(); clientPair != clients.end(); clientPair++)
+	{
+		if (clientPair->second.getNickname() == nickname)
+			return clientPair->first;
+	}
+	return -1;
 }

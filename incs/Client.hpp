@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/08 14:13:01 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/11 10:32:19 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Client
         struct sockaddr_in getAddr(void) const;
         bool isRegistered(void) const;
         bool isGetPassword(void) const;
-        bool isReceivedNickMsg(void) const;
+        bool isReceivedMsg(void) const;
         bool isOperator(void) const;
         t_fd getFd(void) const;
         size_t getChannel(size_t index) const;
@@ -39,6 +39,12 @@ class Client
         // add channel index to the vector
         void addChannel(size_t channelIndex);
 
+        // // client is in channel
+        bool isInChannel(size_t channelIndex);
+
+        // get client ip address
+        std::string getIp(void) const;
+
         // setters
         void setNickname(std::string name);
         void setUsername(std::string name);
@@ -46,7 +52,7 @@ class Client
         void setAddr(struct sockaddr_in addr);
         void setIsRegistered(bool isRegistered);
         void setIsGetPassword(bool isGetPassword);
-        void setIsReceivedNickMsg(bool isReceivedNickMsg);
+        void setIsReceivedMsg(bool isReceivedMsg);
         void setIsOperator(bool isOperator);
         void setFd(t_fd fd);
         
@@ -60,7 +66,7 @@ class Client
         bool _isRegistered;
         // if the PASS command is executed successfully this well be true
         bool _hasPassword;
-        bool _isReceivedNickMsg;
+        bool _isReceivedMsg;
         struct sockaddr_in _addr;
         
         // store the channels index that the client joined
