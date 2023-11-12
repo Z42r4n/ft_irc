@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/11 15:18:28 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 14:14:08 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,9 @@ void Server::joinCommand(t_fd fd, t_params params)
 			
 			// add the client to the channel
 			channel.addClient(&(clients[fd]));
+
+			// set the fist client as operator
+			channel.addOperator(&(clients[fd]));
 			
 			// add channel to the channels vector
 			if (nbChannels < MAX_CHANNELS)

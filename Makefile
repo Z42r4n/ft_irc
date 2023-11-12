@@ -6,7 +6,7 @@
 #    By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/16 17:38:31 by zarran            #+#    #+#              #
-#    Updated: 2023/11/11 15:37:29 by ymoutaou         ###   ########.fr        #
+#    Updated: 2023/11/12 10:16:01 by ymoutaou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,7 @@ SRCS		=	./irc_main.cpp			\
 				./srcs/cmds/MODE.cpp	\
 				./srcs/cmds/PMSG.cpp	\
 				./srcs/cmds/PART.cpp	\
+				./srcs/cmds/TOPIC.cpp	\
 				./srcs/utils/tools.cpp	
 				
 				# ./srcs/Command.cpp	\

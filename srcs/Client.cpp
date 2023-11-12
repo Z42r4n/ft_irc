@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/11 14:20:06 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 09:09:29 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ Client::Client()
     this->_isRegistered = false;
     this->_hasPassword = false;
     this->_isReceivedMsg = false;
+    this->_isOperator = false;
     this->_nickname = "*";
     this->_realname = "";
     this->_username = "";
@@ -28,7 +29,10 @@ Client::Client()
 }
 
 // destructor
-Client::~Client() {}
+Client::~Client() 
+{
+
+}
 
 // copy constructor
 Client::Client(Client const & src)
@@ -45,6 +49,7 @@ Client & Client::operator=(Client const & src)
         this->_isRegistered = src._isRegistered;
         this->_hasPassword = src._hasPassword;
         this->_isReceivedMsg = src._isReceivedMsg;
+        this->_isOperator = src._isOperator;
         this->_nickname = src._nickname;
         this->_realname = src._realname;
         this->_username = src._username;
@@ -177,4 +182,16 @@ bool Client::isInChannel(size_t channelIndex)
 std::string Client::getIp(void) const
 {
     return std::string(inet_ntoa(this->_addr.sin_addr));
+}
+
+// isOperator
+bool Client::isOperator(void) const
+{
+    return this->_isOperator;
+}
+
+// setIsOperator
+void Client::setIsOperator(bool isOperator)
+{
+    this->_isOperator = isOperator;
 }

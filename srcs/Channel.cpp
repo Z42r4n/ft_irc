@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/11 15:54:05 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 14:26:26 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,13 @@ Channel::Channel()
 {
     this->name = "*";
     this->key = "";
+    this->topic = "";
     this->maxClients = 0;
     this->modeString = "";
     this->creationTime = time(NULL);
+    this->topicTime = 0;
+    this->operators = std::vector<Client*>();
+    this->clients = std::vector<Client*>();
 }
 
 // destructor
@@ -41,6 +45,7 @@ Channel & Channel::operator=(Channel const & src)
     {
         this->name = src.name;
         this->key = src.key;
+        this->topic = src.topic;
         this->maxClients = src.maxClients;
         this->clients = src.clients;
         this->operators = src.operators;
@@ -56,6 +61,8 @@ Channel::Channel(std::string name, std::string key, size_t maxClients)
     this->name = name;
     this->key = key;
     this->maxClients = maxClients;
+    this->modeString = "";
+    this->topic = "No topic is set";
 
     // get current time in the timestamp unit
     this->creationTime = time(NULL);
@@ -105,9 +112,22 @@ void Channel::removeClient(Client *client)
 }
 
 // add operator
-void Channel::addOperator(Client &client)
+void Channel::addOperator(Client *client)
 {
     this->operators.push_back(client);
+}
+
+// remove operator
+void Channel::removeOperator(Client *client)
+{
+    for (size_t i = 0; i < this->operators.size(); i++)
+    {
+        if (this->operators[i] == client)
+        {
+            this->operators.erase(this->operators.begin() + i);
+            break ;
+        }
+    }
 }
 
 // get clients
@@ -129,7 +149,9 @@ std::string Channel::listClients() const
     for (size_t i = 0; i < this->clients.size(); i++)
     {
         if (Client* client = this->clients[i]) {
-            list += client->getNickname(); 
+            if (isOperator(*client))
+                list += "@";
+            list += client->getNickname();
             if (i < this->clients.size() - 1)
                 list += " ";
         }
@@ -185,4 +207,39 @@ bool Channel::modeIsSet(char mode)
     if (this->modeString.find(mode) != std::string::npos)
         return true;
     return false;
+}
+
+// check if client is operator
+bool Channel::isOperator(Client &client) const
+{
+    for (size_t i = 0; i < this->operators.size(); i++)
+    {
+        if (this->operators[i]->getNickname() == client.getNickname())
+            return true;
+    }
+    return false;
+}
+
+// get topic
+std::string Channel::getTopic(void) const
+{
+    return this->topic;
+}
+
+// set topic
+void Channel::setTopic(std::string topic)
+{
+    this->topic = topic;
+}
+
+// get topic time
+time_t Channel::getTopicTime(void) const
+{
+    return this->topicTime;
+}
+
+// set topic time
+void Channel::setTopicTime(time_t topicTime)
+{
+    this->topicTime = topicTime;
 }

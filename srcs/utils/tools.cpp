@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/11 16:07:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 12:27:49 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,14 @@ void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int
 			sendData(channels[channelIndex].getClient(j)->getFd(), PART(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str, msg));
 		}
 	}
+	else if (type == _TOPIC)
+	{
+		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
+		{
+			sendData(channels[channelIndex].getClient(j)->getFd(), TOPIC(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str, msg));
+		}
+	}
+
 	// else if (type == _QUIT)
 	// {
 	// 	for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)

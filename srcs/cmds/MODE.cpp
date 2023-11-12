@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/05 13:20:58 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/11 15:10:48 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 09:25:28 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 		sendData(fd, RPL_CHANNELMODEIS(clients[fd].getNickname(), params[1], "+"));
 		sendData(fd, RPL_CREATIONTIME(clients[fd].getNickname(), params[1], std::to_string(channels[channelExist(params[1])].getCreationTime())));
 	}
-	
+
 	// set the default mode
 	if (!channels[channelExist(params[1])].modeIsSet('t'))
 	{
@@ -56,6 +56,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 	// this block of code in case of the mode is passed with the command
 	if (params.size() > 2)
 	{
+
 		std::string mode = params[2];
 		
 		// handle the mode string
@@ -69,7 +70,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 				mode = ft::ft_replace(mode, "-+", "+");
 				continue;
 			}
-
+			
 			// remove the + or - from the end of the mode
 			size_t end = mode.find_last_not_of("+-");
     		if (end != std::string::npos)
@@ -83,6 +84,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 		// set the mode
 		for (size_t i = 0; i < mode.length(); i++) // first one is +
 		{
+			
 			if (!ft::validModes(mode[i]))
 			{
 				// send irc server error message

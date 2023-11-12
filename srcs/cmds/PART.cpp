@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 15:36:23 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/11 16:00:43 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 14:52:29 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,20 @@ void Server::partCommand(t_fd fd, t_params params)
 			// check if the client is in the channel
 			if (clients[fd].isInChannel(channelExist(chans[i])))
 			{
+				// broadcast message to all clients in channel
+				channelBroadcast(fd, chans[i], channelExist(chans[i]), _PART, reason);
+				
 				// remove the client from the channel
 				channels[channelExist(chans[i])].removeClient(&clients[fd]);
 
-				// broadcast message to all clients in channel
-				channelBroadcast(fd, chans[i], channelExist(chans[i]), _PART, reason);
+				// remove client from operator list
+				channels[channelExist(chans[i])].removeOperator(&clients[fd]);
+
+				// remove the channel if the channel is empty
+				if (channels[channelExist(chans[i])].getClientsSize() == 0)
+				{
+					channels.erase(channels.begin() + channelExist(chans[i]));
+				}
 			}
 			else
 			{

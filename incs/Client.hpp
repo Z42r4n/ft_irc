@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/11 10:32:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 08:20:28 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ class Client
         // if the PASS command is executed successfully this well be true
         bool _hasPassword;
         bool _isReceivedMsg;
+        bool _isOperator;
         struct sockaddr_in _addr;
         
         // store the channels index that the client joined

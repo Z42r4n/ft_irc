@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/11 15:35:38 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 14:55:35 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ Server::~Server()
 	
 	// clear clients map
 	clients.clear();
+
+	// clear channels vector
+	channels.clear();
 	
 	// shutdown server
 	shutdown(serverfd, SHUT_RDWR);
@@ -221,6 +224,9 @@ void Server::receiveData(void)
 				// Client disconnected
 				else if (rcv == 0)
 				{
+					// call quit command
+					// quitCommand(i, clientFD, t_params());
+					// close connection
 					closeConnection(i , clientFD);
 				}
 				// Handle recv() error
@@ -247,6 +253,7 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	
 	if (data.find('\n') != std::string::npos)
 	{
+
 		// remove \r\n and spaces from oldData
 		oldData.erase(std::remove(oldData.begin(), oldData.end(), '\r'), oldData.end());
 		oldData.erase(std::remove(oldData.begin(), oldData.end(), '\n'), oldData.end());
@@ -292,6 +299,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		privmsgCommand(fd, params);
 	else if (ft::ft_toupper(command) == "PART")
 		partCommand(fd, params);
+	else if (ft::ft_toupper(command) == "TOPIC")
+		topicCommand(fd, params);
 	else if (ft::ft_toupper(command) == "PING")
 		sendData(fd, "PONG\r\n");
 	else if (ft::ft_toupper(command) == "PONG")

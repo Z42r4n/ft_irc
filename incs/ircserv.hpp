@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/11 15:59:36 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 12:29:10 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #define ERR_NOSUCHNICK(p1, p2) ":1337.ma 401 " + p1 + " " + p2 + " :No such nick or channel name\r\n"
 #define ERR_CANNOTSENDTOCHAN(p1, p2) ":1337.ma 404 " + p1 + " " + p2 + " :Cannot send to channel\r\n"
 #define ERR_NOTONCHANNEL(p1, p2) ":1337.ma 442 " + p1 + " " + p2 + " :You are not on that channel\r\n"
+#define ERR_CHANOPRIVSNEEDED(p1, p2) ":1337.ma 482 " + p1 + " " + p2 + " :You are not channel operator\r\n"
 
 #define RPL_WELCOME(p1, p2) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@localhost\r\n"
 #define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
@@ -43,6 +44,8 @@
 #define RPL_NAMREPLY(p1, p2, p3) ":1337.ma 353 " + p1 + " = " + p2 + " :" + p3 + "\r\n"
 #define RPL_CHANNELMODEIS(p1, p2, p3) ":1337.ma 324 " + p1 + " " + p2 + " " + p3 + "\r\n"
 #define RPL_CREATIONTIME(p1, p2, p3) ":1337.ma 329 " + p1 + " " + p2 + " " + p3 + "\r\n"
+#define RPL_TOPICWHOTIME(p1, p2, p3, p4) ":1337.ma 333 " + p1 + " " + p2 + " " + p3 + " " + p4 + "\r\n"
+#define RPL_TOPIC(p1, p2, p3) ":1337.ma 332 " + p1 + " " + p2 + " :" + p3 + "\r\n"
 
 // ERRORS
 #define ERROR(p1) "ERROR :" + p1 + "\r\n"
@@ -68,6 +71,9 @@
 // PART
 #define PART(p1, p2, p3, p4, p5) ":" + p1 + "!~" + p2 + "@" + p3 + " PART " + p4 + " :" + p5 + "\r\n"
 
+// TOPIC
+#define TOPIC(p1, p2, p3, p4, p5) ":" + p1 + "!~" + p2 + "@" + p3 + " TOPIC " + p4 + " :" + p5 + "\r\n"
+
 // DEFINES
 
 #define USERLEN 12
@@ -88,7 +94,8 @@ enum e_msgType
 	_PART,
 	_QUIT,
 	_NICK,
-	_MSG
+	_MSG,
+	_TOPIC
 };
 
 // INCLUDES

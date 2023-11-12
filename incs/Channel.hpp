@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/11 15:53:42 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/12 14:26:01 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,24 @@ class Channel
         size_t getClientsSize(void) const;
         time_t getCreationTime(void) const;
         std::string getModes(void) const;
+        std::string getTopic(void) const;
+        time_t getTopicTime(void) const;
         
    
         void setName(std::string name);
         void setKey(std::string password);
         void setModes(std::string modes);
+        void setTopic(std::string topic);
+        void setTopicTime(time_t topicTime);
 
         // add client
         void addClient(Client *client);
         // remove client
         void removeClient(Client *client);
         // add operator
-        void addOperator(Client &client);
+        void addOperator(Client *client);
+        // remove operator
+        void removeOperator(Client *client);
         // check if client exist
         bool clientExist(Client &client);
         // add mode
@@ -50,13 +56,17 @@ class Channel
         void removeMode(char mode);
         // mode alredy setted
         bool modeIsSet(char mode);
+        // check if client is operator
+        bool isOperator(Client &client) const;
         
     private:
         std::string name;
         std::string key;
+        std::string topic;
         time_t creationTime;
+        time_t topicTime;
         size_t maxClients;
         std::string modeString;
         std::vector<Client *> clients;
-        std::vector<Client> operators;
+        std::vector<Client *> operators;
 };
