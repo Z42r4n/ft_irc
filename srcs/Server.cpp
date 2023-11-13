@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/12 14:55:35 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 08:56:39 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -301,6 +301,8 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		partCommand(fd, params);
 	else if (ft::ft_toupper(command) == "TOPIC")
 		topicCommand(fd, params);
+	else if (ft::ft_toupper(command) == "KICK")
+		kickCommand(fd, params);
 	else if (ft::ft_toupper(command) == "PING")
 		sendData(fd, "PONG\r\n");
 	else if (ft::ft_toupper(command) == "PONG")

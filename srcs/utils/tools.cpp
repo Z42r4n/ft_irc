@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/12 12:27:49 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 09:15:09 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ int Server::channelExist(std::string channelName)
 }
 
 // broadcast message to all clients in channel
-void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type, std::string msg)
+void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type, std::string msg, std::string comment)
 {
 	if (type == _JOIN)
 	{
@@ -234,6 +234,13 @@ void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int
 		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
 		{
 			sendData(channels[channelIndex].getClient(j)->getFd(), TOPIC(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str, msg));
+		}
+	}
+	else if (type == _KICK)
+	{
+		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
+		{
+			sendData(channels[channelIndex].getClient(j)->getFd(), KICK(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str, msg, comment));
 		}
 	}
 

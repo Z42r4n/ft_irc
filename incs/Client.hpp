@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:46:39 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/12 08:20:28 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 08:44:35 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,14 @@ class Client
         t_fd getFd(void) const;
         size_t getChannel(size_t index) const;
         size_t getChannelsSize(void) const;
+        std::string getIp(void) const;
         
         // add channel index to the vector
         void addChannel(size_t channelIndex);
-
+        // remove channel index from the vector
+        void removeChannel(size_t channelIndex);
         // // client is in channel
         bool isInChannel(size_t channelIndex);
-
-        // get client ip address
-        std::string getIp(void) const;
 
         // setters
         void setNickname(std::string name);

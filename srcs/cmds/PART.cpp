@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 15:36:23 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/12 14:52:29 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 08:14:26 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,9 @@ void Server::partCommand(t_fd fd, t_params params)
 
 				// remove client from operator list
 				channels[channelExist(chans[i])].removeOperator(&clients[fd]);
+
+				// remove the index of the channel from the client
+				clients[fd].removeChannel(channelExist(chans[i]));
 
 				// remove the channel if the channel is empty
 				if (channels[channelExist(chans[i])].getClientsSize() == 0)

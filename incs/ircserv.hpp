@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/12 12:29:10 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 09:09:48 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@
 #define ERR_CANNOTSENDTOCHAN(p1, p2) ":1337.ma 404 " + p1 + " " + p2 + " :Cannot send to channel\r\n"
 #define ERR_NOTONCHANNEL(p1, p2) ":1337.ma 442 " + p1 + " " + p2 + " :You are not on that channel\r\n"
 #define ERR_CHANOPRIVSNEEDED(p1, p2) ":1337.ma 482 " + p1 + " " + p2 + " :You are not channel operator\r\n"
+#define ERR_CHANOPRIVSNEEDED2(p1, p2) ":1337.ma 482 " + p1 + " " + p2 + " :Your privileges are too low\r\n"
+#define ERR_USERNOTINCHANNEL(p1, p2, p3) ":1337.ma 441 " + p1 + " " + p2 + " " + p3 + " :They aren't on that channel\r\n"
 
 #define RPL_WELCOME(p1, p2) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@localhost\r\n"
 #define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
@@ -74,6 +76,9 @@
 // TOPIC
 #define TOPIC(p1, p2, p3, p4, p5) ":" + p1 + "!~" + p2 + "@" + p3 + " TOPIC " + p4 + " :" + p5 + "\r\n"
 
+// KICK
+#define KICK(p1, p2, p3, p4, p5, p6) ":" + p1 + "!~" + p2 + "@" + p3 + " KICK " + p4 + " " + p5 + " :" + p6 + "\r\n"
+
 // DEFINES
 
 #define USERLEN 12
@@ -95,7 +100,8 @@ enum e_msgType
 	_QUIT,
 	_NICK,
 	_MSG,
-	_TOPIC
+	_TOPIC,
+	_KICK
 };
 
 // INCLUDES

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/22 13:47:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/12 09:09:29 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 08:15:13 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,18 @@ void Client::setFd(t_fd fd)
 void Client::addChannel(size_t channelIndex)
 {
     this->_channels.push_back(channelIndex);
+}
+// remove channel name from the vector
+void Client::removeChannel(size_t channelIndex)
+{
+    for (size_t i = 0; i < this->_channels.size(); i++)
+    {
+        if (this->_channels[i] == channelIndex)
+        {
+            this->_channels.erase(this->_channels.begin() + i);
+            break ;
+        }
+    }
 }
 
 // get channel by index
