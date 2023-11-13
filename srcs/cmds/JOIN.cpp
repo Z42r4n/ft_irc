@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/12 14:14:08 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 12:49:57 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,18 @@ void Server::joinCommand(t_fd fd, t_params params)
 		{
 			// this block for later
 			return ;
+		}
+
+		// check if the channel is invite only
+		if (channels[chansIndex[j]].getModes().find('i') != std::string::npos)
+		{
+			// check if the client is invited
+			if (!channels[chansIndex[j]].isInvited(clients[fd]))
+			{
+				// send irc server error message
+				sendData(fd, ERR_INVITEONLYCHAN(clients[fd].getNickname(), chans[j]));
+				continue ;
+			}
 		}
 		
 		// add the name of the channel to the channels vector

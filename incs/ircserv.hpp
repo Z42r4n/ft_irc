@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/13 09:09:48 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 13:27:02 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 #define ERR_CHANOPRIVSNEEDED(p1, p2) ":1337.ma 482 " + p1 + " " + p2 + " :You are not channel operator\r\n"
 #define ERR_CHANOPRIVSNEEDED2(p1, p2) ":1337.ma 482 " + p1 + " " + p2 + " :Your privileges are too low\r\n"
 #define ERR_USERNOTINCHANNEL(p1, p2, p3) ":1337.ma 441 " + p1 + " " + p2 + " " + p3 + " :They aren't on that channel\r\n"
+#define ERR_USERONCHANNEL(p1, p2, p3) ":1337.ma 443 " + p1 + " " + p2 + " " + p3 + " :is already on channel\r\n"
+#define ERR_INVITEONLYCHAN(p1, p2) ":1337.ma 473 " + p1 + " " + p2 + " :Cannot join channel (+i) -- Invited users only\r\n"
 
 #define RPL_WELCOME(p1, p2) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@localhost\r\n"
 #define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
@@ -48,6 +50,7 @@
 #define RPL_CREATIONTIME(p1, p2, p3) ":1337.ma 329 " + p1 + " " + p2 + " " + p3 + "\r\n"
 #define RPL_TOPICWHOTIME(p1, p2, p3, p4) ":1337.ma 333 " + p1 + " " + p2 + " " + p3 + " " + p4 + "\r\n"
 #define RPL_TOPIC(p1, p2, p3) ":1337.ma 332 " + p1 + " " + p2 + " :" + p3 + "\r\n"
+#define RPL_INVITING(p1, p2, p3, p4, p5, p6) ":" + p1 + "!~" + p2 + "@" + p3 + " 341 " + p4 + " " + p5 + " " + p6 + "\r\n"
 
 // ERRORS
 #define ERROR(p1) "ERROR :" + p1 + "\r\n"
@@ -78,6 +81,9 @@
 
 // KICK
 #define KICK(p1, p2, p3, p4, p5, p6) ":" + p1 + "!~" + p2 + "@" + p3 + " KICK " + p4 + " " + p5 + " :" + p6 + "\r\n"
+
+// INVITE
+#define INVITE(p1, p2, p3, p4, p5) ":" + p1 + "!~" + p2 + "@" + p3 + " INVITE " + p4 + " " + p5 + "\r\n"
 
 // DEFINES
 
@@ -118,6 +124,7 @@ enum e_msgType
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <poll.h>

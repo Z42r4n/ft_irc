@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/12 14:26:01 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 12:50:57 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ class Channel
         void addOperator(Client *client);
         // remove operator
         void removeOperator(Client *client);
+        // add to invite list
+        void addInvited(Client *client);
+        // remove from invite list
+        void removeInvited(Client *client);
         // check if client exist
         bool clientExist(Client &client);
         // add mode
@@ -58,6 +62,8 @@ class Channel
         bool modeIsSet(char mode);
         // check if client is operator
         bool isOperator(Client &client) const;
+        // client is invited
+        bool isInvited(Client &client) const;
         
     private:
         std::string name;
@@ -69,4 +75,5 @@ class Channel
         std::string modeString;
         std::vector<Client *> clients;
         std::vector<Client *> operators;
+        std::vector<Client *> invited;
 };

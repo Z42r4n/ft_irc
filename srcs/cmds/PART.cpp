@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 15:36:23 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/13 08:14:26 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 14:42:35 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void Server::partCommand(t_fd fd, t_params params)
 	}
 
 	// if the number of params more than 3, the third param shold start with ':'
-	if (params.size() > 2 && params[2][0] != ':')
+	if (params.size() > 3 && params[2][0] != ':')
 	{
 		// send irc server error message
 		sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
@@ -40,13 +40,17 @@ void Server::partCommand(t_fd fd, t_params params)
 
 	// store the reason
 	std::string reason = "";
-	if (params.size() == 3)
-	{
-		reason = params[2];
-	}
-	else if (params.size() > 3 && params[2][0] == ':')
+
+	if (params.size() > 3 && params[2][0] == ':')
 	{
 		reason = ft::ft_getStr(params);
+	}
+	else if (params.size() == 3)
+	{
+		// skip the first : in the reason
+		reason = params[2];
+		if (params.size() == 3 && params[2][0] == ':')
+			reason = params[2].substr(1);
 	}
 
 	// store the channels
@@ -75,16 +79,24 @@ void Server::partCommand(t_fd fd, t_params params)
 				// remove the client from the channel
 				channels[channelExist(chans[i])].removeClient(&clients[fd]);
 
-				// remove client from operator list
-				channels[channelExist(chans[i])].removeOperator(&clients[fd]);
+				// remove client from operator list if is operator
+				if (channels[channelExist(chans[i])].isOperator(clients[fd]))
+					channels[channelExist(chans[i])].removeOperator(&clients[fd]);
 
 				// remove the index of the channel from the client
 				clients[fd].removeChannel(channelExist(chans[i]));
+
+				// remove the client from the invited list if is invited
+				if (channels[channelExist(chans[i])].isInvited(clients[fd]))
+				{
+					channels[channelExist(chans[i])].removeInvited(&clients[fd]);
+				}
 
 				// remove the channel if the channel is empty
 				if (channels[channelExist(chans[i])].getClientsSize() == 0)
 				{
 					channels.erase(channels.begin() + channelExist(chans[i]));
+					nbChannels--;
 				}
 			}
 			else

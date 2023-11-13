@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/13 08:56:39 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 14:47:12 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void Server::listenSocket(void)
 	// start listening for the clients, here process will go in sleep mode and will wait for the incoming connection
 	if (listen(serverfd, MAX_CLIENTS) < 0)
 		throw std::runtime_error("listen() failed: " + std::string(strerror(errno)) + "\n");
-	std::cout << "\n[+] Server is listening on port: " << BOLDGREEN << port << RESET << "\n" << std::endl;
+	std::cout <<  "\n[+] Server listening on : "  << GREEN << getServerIp() << RESET <<  " / "  << YELLOW << port << RESET << "\n" << std::endl;
 }
 
 // accept sockets
@@ -303,10 +303,10 @@ void Server::parseData(int i, t_fd fd, std::string data)
 		topicCommand(fd, params);
 	else if (ft::ft_toupper(command) == "KICK")
 		kickCommand(fd, params);
-	else if (ft::ft_toupper(command) == "PING")
-		sendData(fd, "PONG\r\n");
+	else if (ft::ft_toupper(command) == "INVITE")
+		inviteCommand(fd, params);
 	else if (ft::ft_toupper(command) == "PONG")
-		sendData(fd, "PING\r\n");
+		return;
 	else if (clients[fd].isRegistered())
 	{
 		// send irc server error message if the command is unknown
@@ -344,4 +344,15 @@ t_fd Server::getClientFd(std::string nickname)
 			return clientPair->first;
 	}
 	return -1;
+}
+
+// get server ip address
+std::string Server::getServerIp(void)
+{
+	char host[256];
+	struct hostent *host_entry;
+	int hostname;
+	hostname = gethostname(host, sizeof(host));
+	host_entry = gethostbyname(host);
+	return std::string(inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0])));
 }

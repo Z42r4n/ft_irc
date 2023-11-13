@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 17:48:58 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/13 09:15:29 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 13:20:47 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,14 @@ class Server
 
         // irc replies functions
         void welcomeMessage(t_fd fd);
-
         // check channel exist
         int channelExist(std::string channelName);
-
         // broadcast message to all clients in channel
         void channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int type, std::string msg = "", std::string comment = "");
-
         // get client fd by nickname
         t_fd getClientFd(std::string nickname);
+        // get server ip address
+        std::string getServerIp(void);
 
         // commands functions
         void passCommand(t_fd fd, t_params params);
@@ -70,6 +69,7 @@ class Server
         void partCommand(t_fd fd, t_params params);
         void topicCommand(t_fd fd, t_params params);
         void kickCommand(t_fd fd, t_params params);
+        void inviteCommand(t_fd fd, t_params params);
 
     private:
         t_fd serverfd;

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 08:17:35 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/13 10:31:19 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 14:44:13 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ void Server::kickCommand(t_fd fd, t_params params)
 	if (params.size() == 4)
 	{
 		comment = params[3];
+		if (params.size() == 4 && params[3][0] == ':')
+			comment = params[3].substr(1);
 	}
 	else if (params.size() > 4 && params[3][0] == ':')
 	{
@@ -111,10 +113,17 @@ void Server::kickCommand(t_fd fd, t_params params)
 			if (channels[channelExist(params[1])].getClientsSize() == 0)
 			{
 				channels.erase(channels.begin() + channelExist(params[1]));
+				nbChannels--;
 			}
 		}
 
 		// remove the channel from the client
 		clients[getClientFd(users[i])].removeChannel(channelExist(params[1]));
+
+		// remove from invited list if client is invited
+		if (channels[channelExist(params[1])].isInvited(clients[getClientFd(users[i])]))
+		{
+			channels[channelExist(params[1])].removeInvited(&(clients[getClientFd(users[i])]));
+		}
 	}
 }

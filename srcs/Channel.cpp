@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/12 14:26:26 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/13 13:05:53 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ Channel::Channel()
     this->topicTime = 0;
     this->operators = std::vector<Client*>();
     this->clients = std::vector<Client*>();
+    this->invited = std::vector<Client*>();
 }
 
 // destructor
@@ -51,6 +52,8 @@ Channel & Channel::operator=(Channel const & src)
         this->operators = src.operators;
         this->modeString = src.modeString;
         this->creationTime = src.creationTime;
+        this->topicTime = src.topicTime;
+        this->invited = src.invited;
     }
     return *this;
 }
@@ -242,4 +245,34 @@ time_t Channel::getTopicTime(void) const
 void Channel::setTopicTime(time_t topicTime)
 {
     this->topicTime = topicTime;
+}
+
+// add to invite list
+void Channel::addInvited(Client *client)
+{
+    this->invited.push_back(client);
+}
+
+// remove from invite list
+void Channel::removeInvited(Client *client)
+{
+    for (size_t i = 0; i < this->invited.size(); i++)
+    {
+        if (this->invited[i] == client)
+        {
+            this->invited.erase(this->invited.begin() + i);
+            break ;
+        }
+    }
+}
+
+// client is invited
+bool Channel::isInvited(Client &client) const
+{
+    for (size_t i = 0; i < this->invited.size(); i++)
+    {
+        if (this->invited[i]->getNickname() == client.getNickname())
+            return true;
+    }
+    return false;
 }
