@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/14 10:30:30 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 13:38:01 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -256,16 +256,6 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	
 	if (data.find('\n') != std::string::npos)
 	{
-		// remove all empty channels
-		for (size_t j = 0; j < channels.size(); j++)
-		{
-			if (channels[j].getClientsSize() == 0)
-			{
-				channels.erase(channels.begin() + j);
-				nbChannels--;
-			}
-		}
-
 		// remove \r\n and spaces from oldData
 		oldData.erase(std::remove(oldData.begin(), oldData.end(), '\r'), oldData.end());
 		oldData.erase(std::remove(oldData.begin(), oldData.end(), '\n'), oldData.end());
@@ -323,6 +313,24 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	{
 		// send irc server error message if the command is unknown
 		sendData(fd, ERR_UNKNOWNCOMMAND(clients[fd].getNickname(), command));
+	}
+
+	// remove all empty channels
+	std::cout << "number of channels: " << channels.size() << std::endl;
+	// for (size_t j = 0; j < channels.size(); j++)
+	// {
+	// 	if (channels[j].getClientsSize() == 0)
+	// 	{
+	// 		channels.erase(channels.begin() + j);
+	// 		nbChannels--;
+	// 	}
+	// }
+
+	// reset isrecievedMessage to false
+	for (size_t j = 0; j < clients.size(); j++)
+	{
+		if (clients[j].isReceivedMsg() == true)
+			clients[j].setIsReceivedMsg(false);
 	}
 
 	// reset command and param

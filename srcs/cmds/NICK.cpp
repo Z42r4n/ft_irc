@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/11 14:41:42 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 11:42:37 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,6 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 					for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
 					{
 						channelBroadcast(fd, params[1], clients[fd].getChannel(j), _NICK);
-					}
-					for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
-					{
-						for (size_t k = 0; k < channels[clients[fd].getChannel(j)].getClientsSize(); k++)
-						{
-							channels[clients[fd].getChannel(j)].getClient(k)->setIsReceivedMsg(false);
-						}
 					}
 				}
 				else

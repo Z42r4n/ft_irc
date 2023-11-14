@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/13 13:05:53 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 13:19:03 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,11 @@ Channel::Channel(std::string name, std::string key, size_t maxClients)
     this->maxClients = maxClients;
     this->modeString = "";
     this->topic = "No topic is set";
+    this->topicTime = 0;
+    this->operators = std::vector<Client*>();
+    this->clients = std::vector<Client*>();
+    this->invited = std::vector<Client*>();
+    
 
     // get current time in the timestamp unit
     this->creationTime = time(NULL);

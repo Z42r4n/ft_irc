@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/14 10:32:17 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 11:08:50 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,8 +250,11 @@ void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int
 			// skip the client that send the message
 			if (channels[channelIndex].getClient(j)->getFd() != fd)
 			{
-
-				sendData(channels[channelIndex].getClient(j)->getFd(), QUIT(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str));
+				if (!channels[channelIndex].getClient(j)->isReceivedMsg())
+				{
+					sendData(channels[channelIndex].getClient(j)->getFd(), QUIT(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str));
+					channels[channelIndex].getClient(j)->setIsReceivedMsg(true);
+				}
 			}
 		}
 	}
