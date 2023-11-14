@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 08:17:35 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/13 14:44:13 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 10:25:16 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,11 +110,11 @@ void Server::kickCommand(t_fd fd, t_params params)
 		{
 			channels[channelExist(params[1])].removeOperator(&(clients[getClientFd(users[i])]));
 			// remove the channel if the channel is empty
-			if (channels[channelExist(params[1])].getClientsSize() == 0)
-			{
-				channels.erase(channels.begin() + channelExist(params[1]));
-				nbChannels--;
-			}
+			// if (channels[channelExist(params[1])].getClientsSize() == 0)
+			// {
+			// 	channels.erase(channels.begin() + channelExist(params[1]));
+			// 	nbChannels--;
+			// }
 		}
 
 		// remove the channel from the client

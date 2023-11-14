@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/13 13:27:02 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 10:32:46 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 #define ERR_USERONCHANNEL(p1, p2, p3) ":1337.ma 443 " + p1 + " " + p2 + " " + p3 + " :is already on channel\r\n"
 #define ERR_INVITEONLYCHAN(p1, p2) ":1337.ma 473 " + p1 + " " + p2 + " :Cannot join channel (+i) -- Invited users only\r\n"
 
-#define RPL_WELCOME(p1, p2) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@localhost\r\n"
+#define RPL_WELCOME(p1, p2, p3) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@" + p3 + "\r\n"
 #define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
 #define RPL_CREATED(p1, p2) ":1337.ma 003 " + p1 + " :This server has been started " + p2 + "\r\n"
 #define RPL_MYINFO(p1) ":1337.ma 004 " + p1 + " 1337.ma 1.0 o o\r\n"
@@ -84,6 +84,9 @@
 
 // INVITE
 #define INVITE(p1, p2, p3, p4, p5) ":" + p1 + "!~" + p2 + "@" + p3 + " INVITE " + p4 + " " + p5 + "\r\n"
+
+// QUIT
+#define QUIT(p1, p2, p3, p4) ":" + p1 + "!~" + p2 + "@" + p3 + " QUIT :" + p4 + "\r\n"
 
 // DEFINES
 

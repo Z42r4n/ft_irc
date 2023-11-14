@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/13 09:15:09 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 10:32:17 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ namespace ft
 // welcome message, Server.hpp
 void Server::welcomeMessage(t_fd fd)
 {
-	sendData(fd, RPL_WELCOME(clients[fd].getNickname(), clients[fd].getUsername()));
+	sendData(fd, RPL_WELCOME(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp()));
 	sendData(fd, RPL_YOURHOST(clients[fd].getNickname()));
 	sendData(fd, RPL_CREATED(clients[fd].getNickname(), start_time));
 	sendData(fd, RPL_MYINFO(clients[fd].getNickname()));
@@ -243,19 +243,16 @@ void Server::channelBroadcast(t_fd fd, std::string str, size_t channelIndex, int
 			sendData(channels[channelIndex].getClient(j)->getFd(), KICK(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str, msg, comment));
 		}
 	}
+	else if (type == _QUIT)
+	{
+		for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
+		{
+			// skip the client that send the message
+			if (channels[channelIndex].getClient(j)->getFd() != fd)
+			{
 
-	// else if (type == _QUIT)
-	// {
-	// 	for (size_t j = 0; j < channels[channelIndex].getClientsSize(); j++)
-	// 	{
-	// 		sendData(channels[channelIndex].getClient(j).getFd(), QUIT(clients[fd].getNickname(), clients[fd].getUsername(), ft::ft_getStr(params)));
-	// 	}
-	// }
-	// else if (type == _PART)
-	// {
-	// 	for (size_t j = 0; j < channels[channelIndex].getClients().size(); j++)
-	// 	{
-	// 		sendData(channels[channelIndex].getClients()[j].getFd(), PART(clients[fd].getNickname(), params[1]));
-	// 	}
-	// }
+				sendData(channels[channelIndex].getClient(j)->getFd(), QUIT(clients[fd].getNickname(), clients[fd].getUsername(), clients[fd].getIp(), str));
+			}
+		}
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/11 15:36:23 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/13 14:42:35 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/14 10:25:29 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,11 @@ void Server::partCommand(t_fd fd, t_params params)
 				}
 
 				// remove the channel if the channel is empty
-				if (channels[channelExist(chans[i])].getClientsSize() == 0)
-				{
-					channels.erase(channels.begin() + channelExist(chans[i]));
-					nbChannels--;
-				}
+				// if (channels[channelExist(chans[i])].getClientsSize() == 0)
+				// {
+				// 	channels.erase(channels.begin() + channelExist(chans[i]));
+				// 	nbChannels--;
+				// }
 			}
 			else
 			{
