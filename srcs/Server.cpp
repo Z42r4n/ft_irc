@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/14 13:38:01 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/15 10:34:07 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,10 @@ Server::Server(t_port port, std::string password)
 	
 	// allocate start_time variable
 	start_time = new char[100];
+	if (!start_time)
+	{
+		throw std::runtime_error("new() failed: " + std::string(strerror(errno)) + "\n");
+	}
 	
 	// set port and password 
 	this->port = port;
@@ -224,13 +228,36 @@ void Server::receiveData(void)
 				// Client disconnected
 				else if (rcv == 0)
 				{
-					t_params param;
+					std::string reason = "Client closed connection";
+					for (size_t j = 0; j < clients[clientFD].getChannelsSize(); j++)
+					{
+						channelBroadcast(clientFD, reason, clients[clientFD].getChannel(j), _QUIT);
+					}
 
-					param.push_back("QUIT");
-					param.push_back("Client closed connection");
+					for (size_t j = 0; j < clients.size(); j++)
+					{
+						if (clients[j].isReceivedMsg() == true)
+						clients[j].setIsReceivedMsg(false);
+					}
+		
+					// remove the client from the channel
+					for (size_t j = 0; j < clients[clientFD].getChannelsSize(); j++)
+					{
+						std::cout << "channel index: " << clients[clientFD].getChannel(j) << std::endl;
+						channels[j].removeClient(&clients[clientFD]);
+						// remove the client from operators, if the client is the operator of the channel
+						if (channels[clients[clientFD].getChannel(j)].isOperator(clients[clientFD]))
+							channels[clients[clientFD].getChannel(j)].removeOperator(&clients[clientFD]);
+					}
 					
-					// call quit command
-					quitCommand(i, clientFD, param);
+					// remove the index of the channel from the client
+					for (size_t j = 0; j < clients[clientFD].getChannelsSize(); j++)
+					{
+						clients[clientFD].removeChannel(clients[clientFD].getChannel(j));
+					}
+					
+					// close the connection
+					closeConnection(i, clientFD);
 				}
 				// Handle recv() error
 				else if (rcv == -1)
@@ -308,7 +335,7 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	else if (ft::ft_toupper(command) == "INVITE")
 		inviteCommand(fd, params);
 	else if (ft::ft_toupper(command) == "PONG")
-		return;
+		sendData(fd, "PING\r\n");
 	else if (clients[fd].isRegistered())
 	{
 		// send irc server error message if the command is unknown
@@ -317,14 +344,15 @@ void Server::parseData(int i, t_fd fd, std::string data)
 
 	// remove all empty channels
 	std::cout << "number of channels: " << channels.size() << std::endl;
-	// for (size_t j = 0; j < channels.size(); j++)
-	// {
-	// 	if (channels[j].getClientsSize() == 0)
-	// 	{
-	// 		channels.erase(channels.begin() + j);
-	// 		nbChannels--;
-	// 	}
-	// }
+	for (size_t j = 0; j < channels.size(); j++)
+	{
+		if (channels[j].getClientsSize() == 0)
+		{
+			channels.erase(channels.begin() + j);
+			nbChannels--;
+			j--;
+		}
+	}
 
 	// reset isrecievedMessage to false
 	for (size_t j = 0; j < clients.size(); j++)

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 14:11:47 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/14 13:34:06 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/15 09:16:42 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,31 +66,37 @@ void Server::quitCommand(int i, t_fd fd, t_params params)
 		if (reason == "Closing connection")
 			reason = clients[fd].getNickname();
 
-		// sond quit messaget to all channels
+		// broadcast message to all clients in channel
 		for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
 		{
-			// broadcast message to all clients in channel
 			channelBroadcast(fd, reason, clients[fd].getChannel(j), _QUIT);
-			// remove the client from the channel
-			
+		}
+		
+		// remove the client from the channel
+		for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
+		{
 			std::cout << "channel index: " << clients[fd].getChannel(j) << std::endl;
 			channels[j].removeClient(&clients[fd]);
 			// remove the client from operators, if the client is the operator of the channel
 			if (channels[clients[fd].getChannel(j)].isOperator(clients[fd]))
 				channels[clients[fd].getChannel(j)].removeOperator(&clients[fd]);
-			// remove the index of the channel from the client
+		}
+		
+		// remove the index of the channel from the client
+		for (size_t j = 0; j < clients[fd].getChannelsSize(); j++)
+		{
 			clients[fd].removeChannel(clients[fd].getChannel(j));
 		}
 		// print the names of channels and clients
-		for (size_t j = 0; j < channels.size(); j++)
-		{
-			std::cout << "channel name: " << channels[j].getName() << std::endl;
-			std::cout << "channel clients: " << std::endl;
-			for (size_t k = 0; k < channels[j].getClientsSize(); k++)
-			{
-				std::cout << channels[j].getClient(k)->getNickname() << std::endl;
-			}
-		}
+		// for (size_t j = 0; j < channels.size(); j++)
+		// {
+		// 	std::cout << "channel name: " << channels[j].getName() << std::endl;
+		// 	std::cout << "channel clients: " << std::endl;
+		// 	for (size_t k = 0; k < channels[j].getClientsSize(); k++)
+		// 	{
+		// 		std::cout << channels[j].getClient(k)->getNickname() << std::endl;
+		// 	}
+		// }
 		// close the connection
 		closeConnection(i, fd);
 	}
