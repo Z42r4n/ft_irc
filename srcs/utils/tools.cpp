@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 16:22:19 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/14 11:08:50 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/15 13:24:31 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ namespace ft
 	// check modes, supported modes: i, t, k, o, l, + and -;
 	bool validModes(char modes)
 	{
-		std::string modesList = "-+itkol";
+		std::string modesList = "-+itkolsn";
 		if (modesList.find(modes) != std::string::npos)
 			return true;
 		return false;
@@ -139,6 +139,18 @@ namespace ft
 		}
 		return str;
 	}
+
+	// check if the string is a number
+	bool isNumber(std::string str)
+	{
+		for (size_t i = 0; i < str.length(); i++)
+		{
+			if (!std::isdigit(str[i]))
+				return false;
+		}
+		return true;
+	}
+
 }
 
 // welcome message, Server.hpp

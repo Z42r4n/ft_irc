@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/20 10:55:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/14 10:32:46 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/15 14:53:07 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #define ERR_NEEDMOREPARAMS(p1, p2) ":1337.ma 461 " + p1 + " " + p2 + " :Syntax error\r\n"
 #define ERR_PASSWDMISMATCH(p1) ":1337.ma 464 " + p1 + " :Invalid password\r\n"
 #define ERR_NICKNAMEINUSE(p1, p2) ":1337.ma 433 " + p1 + " " + p2 + " :Nickname already in use\r\n"
-#define ERR_ERRONEUSNICKNAME(p1, p2) ":1337.ma 432 " + p1 + " " + p2 + " :Erroneus nickname\r\n"
+#define ERR_ERRONEUSNICKNAME(p1, p2) ":1337.ma 432 " + p1 + " " + p2 + " Erroneus nickname\r\n"
 #define ERR_NICKNAMETOOLONG(p1, p2) ":1337.ma 432 " + p1 + " " + p2 + " :Nickname too long, max. 9 characters\r\n"
 #define ERR_NOTREGISTERED(p1) ":1337.ma 451 " + p1 + " :Connection not registered\r\n"
 #define ERR_NOMOTD(p1) ":1337.ma 422 " + p1 + " :MOTD File is missing\r\n"
@@ -34,6 +34,8 @@
 #define ERR_USERNOTINCHANNEL(p1, p2, p3) ":1337.ma 441 " + p1 + " " + p2 + " " + p3 + " :They aren't on that channel\r\n"
 #define ERR_USERONCHANNEL(p1, p2, p3) ":1337.ma 443 " + p1 + " " + p2 + " " + p3 + " :is already on channel\r\n"
 #define ERR_INVITEONLYCHAN(p1, p2) ":1337.ma 473 " + p1 + " " + p2 + " :Cannot join channel (+i) -- Invited users only\r\n"
+#define ERR_CHANNELISFULL(p1, p2) ":1337.ma 471 " + p1 + " " + p2 + " :Cannot join channel (+l) -- Channel is full, try later\r\n"
+#define ERR_BADCHANNELKEY(p1, p2) ":1337.ma 475 " + p1 + " " + p2 + " :Cannot join channel (+k) -- Wrong channel key\r\n"
 
 #define RPL_WELCOME(p1, p2, p3) ":1337.ma 001 " + p1 + " :Welcome to the Internet Relay Network " + p1 + "!~" + p2 + "@" + p3 + "\r\n"
 #define RPL_YOURHOST(p1) ":1337.ma 002 " + p1 + " :Your host is 1337.ma, running version 1.0\r\n"
@@ -150,6 +152,7 @@ namespace ft
 	bool isNicknameValid(std::string nickname);
 	bool validModes(char modes);
 	std::string ft_toupper(std::string str);
+	bool isNumber(std::string str);
 }
 
 #endif

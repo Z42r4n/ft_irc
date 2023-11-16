@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/29 14:15:54 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/14 11:42:37 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/15 15:17:53 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,19 +39,22 @@ void Server::nickCommand(int i, t_fd fd, t_params params)
 			// send irc server error message
 			sendData(fd, ERR_ERRONEUSNICKNAME(clients[fd].getNickname(), params[1]));
 			return ;
-		}	
+		}
 
-		// check if the nickname is already taken from another client
-		for (t_fd k = 0; k < nfds; k++)
+		// check if the nickname is already taken by me
+		if (clients[fd].getNickname() == params[1])
 		{
-			for (t_fd j = 0; j < (t_fd)clients.size(); j++)
+			return ;
+		}
+		
+		// check if the nickname is already taken from another client
+		for (t_clients_it it = clients.begin(); it != clients.end(); it++)
+		{
+			if (it->second.getNickname() == params[1])
 			{
-				if (k != j && clients[j].getNickname() == params[1])
-				{
-					// send irc server error message
-					sendData(fd, ERR_NICKNAMEINUSE(clients[fd].getNickname(), params[1]));
-					return ;
-				}
+				// send irc server error message
+				sendData(fd, ERR_NICKNAMEINUSE(clients[fd].getNickname(), params[1]));
+				return ;
 			}
 		}
 		

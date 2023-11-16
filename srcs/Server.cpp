@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/15 10:34:07 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/16 18:22:45 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -335,7 +335,7 @@ void Server::parseData(int i, t_fd fd, std::string data)
 	else if (ft::ft_toupper(command) == "INVITE")
 		inviteCommand(fd, params);
 	else if (ft::ft_toupper(command) == "PONG")
-		sendData(fd, "PING\r\n");
+		{}
 	else if (clients[fd].isRegistered())
 	{
 		// send irc server error message if the command is unknown

@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 11:45:07 by ymoutaou          #+#    #+#             */
-/*   Updated: 2023/11/13 12:49:57 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/15 15:16:05 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void Server::joinCommand(t_fd fd, t_params params)
 	}
 
 	// check if invalid number of params
-	if (params.size() < 2 || params.size() > 3)
+	if (params.size() < 2)
 	{
 		// send irc server error message
 		sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
@@ -54,6 +54,21 @@ void Server::joinCommand(t_fd fd, t_params params)
 	else
 	{
 		chans.push_back(params[1]);
+	}
+
+	// split the params[2] by ',' if the client want to join multiple channels
+	t_params keys;
+	
+	if (params.size() == 3)
+	{
+		if (params[2].find(',') != std::string::npos)
+		{
+			keys = ft::ft_split(params[2], ",");
+		}
+		else
+		{
+			keys.push_back(params[2]);
+		}
 	}
 
 	// check if the channels exist return -1 if not exist
@@ -133,6 +148,40 @@ void Server::joinCommand(t_fd fd, t_params params)
 			{
 				// send irc server error message
 				sendData(fd, ERR_INVITEONLYCHAN(clients[fd].getNickname(), chans[j]));
+				continue ;
+			}
+		}
+
+		// check if the channel has limit
+		if (channels[chansIndex[j]].getModes().find('l') != std::string::npos)
+		{
+				// check if the channel is full
+			if (channels[chansIndex[j]].getClientsSize() + 1 > channels[chansIndex[j]].getLimit())
+			{
+				// send irc server error message
+				sendData(fd, ERR_CHANNELISFULL(clients[fd].getNickname(), chans[j]));
+				continue ;
+			}
+		}
+
+		// check if the channel has password
+		if (channels[chansIndex[j]].getModes().find('k') != std::string::npos)
+		{
+			// check if the client send the password
+			if (params.size() == 3)
+			{
+				// check if the password is correct
+				if (keys[j] != channels[chansIndex[j]].getKey())
+				{
+					// send irc server error message
+					sendData(fd, ERR_BADCHANNELKEY(clients[fd].getNickname(), chans[j]));
+					continue ;
+				}
+			}
+			else
+			{
+				// send irc server error message
+				sendData(fd, ERR_BADCHANNELKEY(clients[fd].getNickname(), chans[j]));
 				continue ;
 			}
 		}

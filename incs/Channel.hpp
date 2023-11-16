@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:55:56 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/14 13:04:40 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/16 10:42:59 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,11 @@ class Channel
         std::string getModes(void) const;
         std::string getTopic(void) const;
         time_t getTopicTime(void) const;
+        size_t getLimit(void) const;
         
-   
         void setName(std::string name);
         void setKey(std::string password);
+        void setLimit(size_t limit);
         void setModes(std::string modes);
         void setTopic(std::string topic);
         void setTopicTime(time_t topicTime);
@@ -64,6 +65,8 @@ class Channel
         bool isOperator(Client &client) const;
         // client is invited
         bool isInvited(Client &client) const;
+        // get clirn by nickname
+        Client *getClientByNickname(std::string nickname);
         
     private:
         std::string name;
@@ -71,7 +74,7 @@ class Channel
         std::string topic;
         time_t creationTime;
         time_t topicTime;
-        size_t maxClients;
+        size_t limit;
         std::string modeString;
         std::vector<Client *> clients;
         std::vector<Client *> operators;

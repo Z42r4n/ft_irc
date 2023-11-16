@@ -6,7 +6,7 @@
 /*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 14:57:00 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/14 13:19:03 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/16 10:43:48 by ymoutaou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Channel::Channel()
     this->name = "*";
     this->key = "";
     this->topic = "";
-    this->maxClients = 0;
+    this->limit = 0;
     this->modeString = "";
     this->creationTime = time(NULL);
     this->topicTime = 0;
@@ -47,7 +47,7 @@ Channel & Channel::operator=(Channel const & src)
         this->name = src.name;
         this->key = src.key;
         this->topic = src.topic;
-        this->maxClients = src.maxClients;
+        this->limit = src.limit;
         this->clients = src.clients;
         this->operators = src.operators;
         this->modeString = src.modeString;
@@ -59,11 +59,11 @@ Channel & Channel::operator=(Channel const & src)
 }
 
 // constructor with parameters
-Channel::Channel(std::string name, std::string key, size_t maxClients)
+Channel::Channel(std::string name, std::string key, size_t limit)
 {
     this->name = name;
     this->key = key;
-    this->maxClients = maxClients;
+    this->limit = limit;
     this->modeString = "";
     this->topic = "No topic is set";
     this->topicTime = 0;
@@ -280,4 +280,27 @@ bool Channel::isInvited(Client &client) const
             return true;
     }
     return false;
+}
+
+// set limit
+void Channel::setLimit(size_t limit)
+{
+    this->limit = limit;
+}
+
+// get limit
+size_t Channel::getLimit(void) const
+{
+    return this->limit;
+}
+
+// get client by nickname
+Client *Channel::getClientByNickname(std::string nickname)
+{
+    for (size_t i = 0; i < this->clients.size(); i++)
+    {
+        if (this->clients[i]->getNickname() == nickname)
+            return this->clients[i];
+    }
+    return NULL;
 }
