@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 18:21:59 by zarran            #+#    #+#             */
-/*   Updated: 2023/11/16 18:22:45 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/16 19:53:44 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -386,10 +386,15 @@ void Server::closeConnection(int i, t_fd fd)
 // get client fd by nickname
 t_fd Server::getClientFd(std::string nickname)
 {
-	for (t_clients_it clientPair = clients.begin(); clientPair != clients.end(); clientPair++)
+	// for (t_clients_it clientPair = clients.begin(); clientPair != clients.end(); clientPair++)
+	// {
+	// 	if (clientPair->second.getNickname() == nickname)
+	// 		return clientPair->first;
+	// }
+	for (size_t j = 0; j < clients.size(); j++)
 	{
-		if (clientPair->second.getNickname() == nickname)
-			return clientPair->first;
+		if (clients[j].getNickname() == nickname)
+			return clients[j].getFd();
 	}
 	return -1;
 }
@@ -399,8 +404,7 @@ std::string Server::getServerIp(void)
 {
 	char host[256];
 	struct hostent *host_entry;
-	int hostname;
-	hostname = gethostname(host, sizeof(host));
+	gethostname(host, sizeof(host));
 	host_entry = gethostbyname(host);
 	return std::string(inet_ntoa(*((struct in_addr*) host_entry->h_addr_list[0])));
 }

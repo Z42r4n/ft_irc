@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   MODE.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ymoutaou <ymoutaou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zarran <zarran@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 16:07:15 by houadou           #+#    #+#             */
-/*   Updated: 2023/11/16 18:21:02 by ymoutaou         ###   ########.fr       */
+/*   Updated: 2023/11/16 21:07:54 by zarran           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,23 +114,22 @@ void Server::modeCommand(t_fd fd, t_params params)
 
 			if (mode[i] == '+' && mode[i + 1] == 'o')
 			{
-				
 				if (params.size () <= 3)
 				{
 					sendData(fd, ERR_NEEDMOREPARAMS(clients[fd].getNickname(), params[0]));
+					i++;
 					continue ;
 				}
 				
 				pos_of_o = posOfOp(mode);
 
 				// chekc if the client on the server
-				std::cout << "params[pos_of_o]: " << params[pos_of_o] << std::endl;
 				if (getClientFd(params[pos_of_o]) == -1)
 				{
 					// send irc server error message
 					sendData(fd, ERR_NOSUCHNICK(clients[fd].getNickname(), params[pos_of_o]));
-					// i++;
-					// continue ;
+					i++;
+					continue ;
 				}
 				
 				// check if the client is on the channel
@@ -153,14 +152,14 @@ void Server::modeCommand(t_fd fd, t_params params)
 				{
 					// set the client operator
 					channels[channelExist(params[1])].addOperator(&(clients[getClientFd(params[pos_of_o])]));
-
 					flag_mode = true;
 					i++;
+					continue;
 				}
 			}
 				
 
-			else if (mode[i] == '-' && mode[i + 1] == 'o')
+			if (mode[i] == '-' && mode[i + 1] == 'o')
 			{
 				if (params.size () <= 3)
 				{
@@ -170,7 +169,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 				}
 				
 				pos_of_o = posOfOp(mode);
-				std::cout << "pos_of_o: " << pos_of_o << std::endl;
+
 				// chekc if the client on the server
 				if (getClientFd(params[pos_of_o]) == -1)
 				{
@@ -190,19 +189,21 @@ void Server::modeCommand(t_fd fd, t_params params)
 				}
 
 				// check if the client is already operator
-				else 
+				else if (channels[channelExist(params[1])].isOperator(clients[getClientFd(params[pos_of_o])]))
 				{
-					// set the client operator
-					if (channels[channelExist(params[1])].isOperator(clients[getClientFd(params[pos_of_o])]))
-					{
-						channels[channelExist(params[1])].removeOperator(&(clients[getClientFd(params[pos_of_o])]));	
-						flag_mode = true;
-					}
+					channels[channelExist(params[1])].removeOperator(&(clients[getClientFd(params[pos_of_o])]));
+					flag_mode = true;
 					i++;
+					continue ;
+				}
+				else
+				{
+					i++;
+					continue;
 				}
 			}
 
-			else if (mode[i] == 'o')
+			if (mode[i] == 'o')
 			{
 				
 				if (params.size () <= 3)
@@ -572,7 +573,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 			mode += " limit: " + std::to_string(channels[channelExist(params[1])].getLimit());
 		if (channels[channelExist(params[1])].modeIsSet('k') && mode.find('k') != std::string::npos)
 			mode += " key: " + channels[channelExist(params[1])].getKey();
-		if ((mode.find('o') != std::string::npos || mode.find("+o") != std::string::npos) && pos_of_o != 0 && channels[channelExist(params[1])].isOperator(clients[getClientFd(params[pos_of_o])]))
+		if ((mode.find('o') != std::string::npos || mode.find("+o") != std::string::npos) && pos_of_o != 0 && getClientFd(params[pos_of_o]) != -1 && channels[channelExist(params[1])].isOperator(clients[getClientFd(params[pos_of_o])]))
 		{
 			mode += " new op: " + params[pos_of_o];
 			f = 1;
@@ -590,6 +591,7 @@ void Server::modeCommand(t_fd fd, t_params params)
 			flag_mode = false;
 		}
 		// print the modeString
+		(void)flag_mode;
 		std::cout << "modeString: " << channels[channelExist(params[1])].getModes() << std::endl;
 	}
 	std::cout << "here\n";
